@@ -1,19 +1,15 @@
 import fs from "fs"
 import path from "path"
-import yaml from "js-yaml"
+import matter from "gray-matter"
 import { fileURLToPath } from "url"
 
 function parseFrontmatter(raw) {
-  const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/)
-  if (match) {
-    try {
-      const data = yaml.load(match[1]) || {}
-      return { data, content: match[2].trim() }
-    } catch {
-      return { data: {}, content: raw }
-    }
+  try {
+    const parsed = matter(raw)
+    return { data: parsed.data || {}, content: (parsed.content || "").trim() }
+  } catch {
+    return { data: {}, content: raw }
   }
-  return { data: {}, content: raw }
 }
 
 const __filename = fileURLToPath(import.meta.url)
