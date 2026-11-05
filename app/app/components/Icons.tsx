@@ -25,3 +25,17 @@ export function LinkedinIcon({ className = "w-4 h-4" }: { className?: string }) 
     </svg>
   )
 }
+
+export function GitlabIcon({ className = "w-4 h-4" }: { className?: string }) {
+  return (
+    <svg
+      role="img"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      className={className}
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path d="m23.6 9.6-1.5-4.6c-.2-.5-.7-.8-1.2-.8-.5 0-1 .3-1.2.8l-1.8 5.6H6.1L4.3 5c-.2-.5-.7-.8-1.2-.8-.5 0-1 .3-1.2.8L.4 9.6c-.2.6 0 1.2.5 1.6L12 20.3l11.1-9.1c.5-.4.7-1 .5-1.6z" />
+    </svg>
+  )
+}

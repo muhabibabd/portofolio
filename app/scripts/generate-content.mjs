@@ -1,7 +1,20 @@
 import fs from "fs"
 import path from "path"
-import matter from "gray-matter"
+import yaml from "js-yaml"
 import { fileURLToPath } from "url"
+
+function parseFrontmatter(raw) {
+  const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/)
+  if (match) {
+    try {
+      const data = yaml.load(match[1]) || {}
+      return { data, content: match[2].trim() }
+    } catch {
+      return { data: {}, content: raw }
+    }
+  }
+  return { data: {}, content: raw }
+}
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -34,7 +47,7 @@ if (fs.existsSync(projectsDir)) {
   projects = files.map((file) => {
     const slug = file.replace(".md", "")
     const raw = fs.readFileSync(path.join(projectsDir, file), "utf-8")
-    const { data, content } = matter(raw)
+    const { data, content } = parseFrontmatter(raw)
     return {
       slug: data.slug || slug,
       title: data.title || data.judul || slug,
@@ -61,7 +74,7 @@ if (fs.existsSync(blogDir)) {
   posts = files.map((file) => {
     const slug = file.replace(".md", "")
     const raw = fs.readFileSync(path.join(blogDir, file), "utf-8")
-    const { data, content } = matter(raw)
+    const { data, content } = parseFrontmatter(raw)
     return {
       slug: data.slug || slug,
       title: data.title || slug,
@@ -83,7 +96,7 @@ if (fs.existsSync(materiDir)) {
   materi = files.map((file) => {
     const slug = file.replace(".md", "")
     const raw = fs.readFileSync(path.join(materiDir, file), "utf-8")
-    const { data, content } = matter(raw)
+    const { data, content } = parseFrontmatter(raw)
     const title = data.judul || data.title || content.split("\n")[0]?.replace(/^#\s+/, "") || slug
     const deskripsi = data.deskripsi || data.description || ""
     const kelas = data.kelas || "Umum"
@@ -110,7 +123,7 @@ const aboutCandidates = [
 for (const c of aboutCandidates) {
   if (fs.existsSync(c) && !fs.statSync(c).isDirectory()) {
     const raw = fs.readFileSync(c, "utf-8")
-    const { content } = matter(raw)
+    const { content } = parseFrontmatter(raw)
     aboutContent = content
     break
   }

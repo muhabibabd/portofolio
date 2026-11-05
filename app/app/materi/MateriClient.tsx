@@ -2,14 +2,6 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { motion, AnimatePresence } from "framer-motion"
-import {
-  ArrowLeft,
-  ArrowUpRight,
-  GraduationCap,
-  Clock,
-  Search,
-} from "lucide-react"
 import type { MateriData } from "@/lib/content"
 
 export default function MateriClient({
@@ -32,130 +24,185 @@ export default function MateriClient({
   })
 
   return (
-    <main className="min-h-screen py-20">
-      <div className="max-w-5xl mx-auto px-6">
-        <Link
-          href="/"
-          className="inline-flex items-center gap-2 text-xs font-mono text-slate-400 hover:text-white transition-colors mb-8"
+    <main
+      className="min-h-screen"
+      style={{
+        paddingTop: "clamp(64px, 10vw, 120px)",
+        paddingBottom: "clamp(64px, 10vw, 120px)",
+        paddingLeft: "clamp(20px, 4vw, 48px)",
+        paddingRight: "clamp(20px, 4vw, 48px)",
+        maxWidth: "960px",
+        margin: "0 auto",
+      }}
+    >
+      <Link
+        href="/"
+        className="inline-block font-mono text-xs mb-10 transition-colors"
+        style={{
+          color: "var(--fg-muted)",
+          textDecorationLine: "underline",
+          textUnderlineOffset: "4px",
+        }}
+      >
+        ← Kembali ke Beranda
+      </Link>
+
+      {/* Header */}
+      <div className="mb-14">
+        <p className="font-mono text-xs uppercase tracking-widest mb-3" style={{ color: "var(--fg-muted)" }}>
+          MATERI &amp; SILABUS TERBUKA
+        </p>
+        <h1
+          className="font-display mb-4"
+          style={{
+            fontSize: "clamp(2.5rem, 6vw, 4.5rem)",
+            letterSpacing: "-0.02em",
+            color: "var(--fg)",
+            lineHeight: 1.05,
+          }}
         >
-          <ArrowLeft className="w-3.5 h-3.5" />
-          <span>Kembali ke Overview</span>
-        </Link>
+          Silabus Belajar Terbuka
+        </h1>
+        <p
+          className="max-w-xl text-base leading-relaxed"
+          style={{ color: "var(--fg-2)" }}
+        >
+          Panduan praktis dan kurikulum mandiri seputar ekosistem web modern, Laravel backend, dan arsitektur database.
+        </p>
+      </div>
 
-        {/* Header */}
-        <div className="space-y-4 mb-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-mono">
-            <GraduationCap className="w-3.5 h-3.5" />
-            <span>Open Learning Materials</span>
-          </div>
-          <h1 className="text-4xl sm:text-5xl font-display font-extrabold text-white tracking-tight">
-            Materi Pembelajaran Terbuka
-          </h1>
-          <p className="text-slate-400 text-sm sm:text-base leading-relaxed max-w-xl">
-            Modul ringkas dan panduan praktis dari pengalaman nyata untuk membantu Anda memahami konsep inti backend dan web development modern.
-          </p>
-        </div>
-
-        {/* Filter & Search */}
-        <div className="space-y-4 mb-10">
-          <div className="relative">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-            <input
-              type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Cari materi pembelajaran..."
-              className="w-full pl-10 pr-4 py-2.5 text-xs font-mono bg-[#11131a] border border-white/10 rounded-2xl text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
-            />
-          </div>
-
-          {allClasses.length > 0 && (
-            <div className="flex flex-wrap gap-1.5 items-center">
-              <span className="text-xs font-mono text-slate-500 mr-1">Kelas:</span>
+      {/* Filter & Search */}
+      <div
+        className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 mb-10 pb-6"
+        style={{ borderBottom: "1px solid var(--line)" }}
+      >
+        <div className="flex flex-wrap items-center gap-4">
+          <button
+            type="button"
+            onClick={() => setSelectedKelas(null)}
+            className="font-mono text-xs cursor-pointer transition-colors"
+            style={{
+              color: selectedKelas === null ? "var(--fg)" : "var(--fg-muted)",
+              textDecorationLine: selectedKelas === null ? "underline" : "none",
+              textUnderlineOffset: "6px",
+              background: "transparent",
+              border: "none",
+              padding: "4px 0",
+            }}
+          >
+            Semua Kelas
+          </button>
+          {allClasses.map((kelas) => {
+            const active = selectedKelas === kelas
+            return (
               <button
-                onClick={() => setSelectedKelas(null)}
-                className={`px-3 py-1 rounded-lg text-xs font-mono transition-colors cursor-pointer ${
-                  selectedKelas === null
-                    ? "bg-blue-600 text-white font-medium"
-                    : "bg-white/5 text-slate-400 hover:text-white"
-                }`}
+                key={kelas}
+                type="button"
+                onClick={() => setSelectedKelas(selectedKelas === kelas ? null : kelas)}
+                className="font-mono text-xs cursor-pointer transition-colors"
+                style={{
+                  color: active ? "var(--fg)" : "var(--fg-muted)",
+                  textDecorationLine: active ? "underline" : "none",
+                  textUnderlineOffset: "6px",
+                  background: "transparent",
+                  border: "none",
+                  padding: "4px 0",
+                }}
               >
-                Semua Kelas
+                {kelas}
               </button>
-              {allClasses.map((kelas) => (
-                <button
-                  key={kelas}
-                  onClick={() => setSelectedKelas(selectedKelas === kelas ? null : kelas)}
-                  className={`px-3 py-1 rounded-lg text-xs font-mono transition-colors cursor-pointer ${
-                    selectedKelas === kelas
-                      ? "bg-blue-600 text-white font-medium"
-                      : "bg-white/5 text-slate-400 hover:text-white"
-                  }`}
-                >
-                  {kelas}
-                </button>
-              ))}
-            </div>
-          )}
+            )
+          })}
         </div>
 
-        {/* Cards Grid with Scroll In-View Animation */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          <AnimatePresence mode="popLayout">
-            {filtered.map((m, idx) => (
-              <motion.article
-                key={m.slug}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.15 }}
-                exit={{ opacity: 0, scale: 0.98 }}
-                transition={{ duration: 0.35, delay: idx * 0.06, ease: "easeOut" }}
-                whileHover={{ y: -3, transition: { duration: 0.2 } }}
-                className="group p-6 sm:p-7 rounded-2xl bg-[#11131a] border border-white/10 hover:border-blue-500/40 shadow-xl shadow-black/20 transition-all flex flex-col justify-between"
-              >
-                <div>
-                  <div className="flex items-center justify-between gap-2 mb-3">
-                    <span className="text-[10px] font-mono uppercase tracking-wider px-2.5 py-0.5 rounded-md bg-blue-500/10 text-blue-300 border border-blue-500/20 font-semibold">
-                      {m.kelas}
-                    </span>
-                    <span className="flex items-center gap-1 text-[11px] font-mono text-slate-400">
-                      <Clock className="w-3 h-3" />
-                      {m.readingTime}
-                    </span>
-                  </div>
-
-                  <h2 className="text-xl font-display font-bold text-white group-hover:text-blue-400 transition-colors mb-2">
-                    <Link href={`/materi/${m.slug}`}>{m.title}</Link>
-                  </h2>
-
-                  <p className="text-xs sm:text-sm text-slate-400 leading-relaxed mb-4">
-                    {m.deskripsi}
-                  </p>
-                </div>
-
-                <div className="pt-4 border-t border-white/10 flex items-center justify-between text-xs font-mono">
-                  <span className="text-slate-400">{m.date}</span>
-                  <Link
-                    href={`/materi/${m.slug}`}
-                    className="inline-flex items-center gap-1.5 text-blue-400 hover:text-blue-300 font-semibold group-hover:underline"
-                  >
-                    <span>Mulai Belajar</span>
-                    <ArrowUpRight className="w-3.5 h-3.5" />
-                  </Link>
-                </div>
-              </motion.article>
-            ))}
-          </AnimatePresence>
-
-          {filtered.length === 0 && (
-            <div className="col-span-full py-16 text-center border border-dashed border-white/10 rounded-2xl">
-              <p className="text-slate-400 font-mono text-xs">
-                Tidak ada materi yang cocok dengan pencarian saat ini.
-              </p>
-            </div>
-          )}
+        <div className="w-full sm:w-64">
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Cari materi..."
+            className="w-full px-3 py-2 text-xs font-mono transition-colors"
+            style={{
+              background: "var(--bg-raised)",
+              border: "1px solid var(--line)",
+              color: "var(--fg)",
+              borderRadius: "2px",
+              outline: "none",
+            }}
+          />
         </div>
       </div>
+
+      {/* Materi List */}
+      <ol style={{ borderTop: "1px solid var(--line)" }}>
+        {filtered.map((m, idx) => (
+          <li key={m.slug} style={{ borderBottom: "1px solid var(--line)" }}>
+            <Link
+              href={`/materi/${m.slug}`}
+              className="group block transition-all"
+              style={{
+                paddingTop: "1.75rem",
+                paddingBottom: "1.75rem",
+                textDecoration: "none",
+                color: "inherit",
+              }}
+            >
+              <div className="flex items-start justify-between gap-6">
+                <div className="flex items-start gap-4 sm:gap-6 flex-1">
+                  <span
+                    className="font-mono text-xs shrink-0 pt-1"
+                    style={{ color: "var(--fg-muted)" }}
+                  >
+                    {String(idx + 1).padStart(2, "0")}
+                  </span>
+                  <div>
+                    <h2
+                      className="font-display text-2xl group-hover:text-[var(--fg)] transition-colors mb-2"
+                      style={{
+                        color: "var(--fg)",
+                        letterSpacing: "-0.02em",
+                        lineHeight: 1.15,
+                      }}
+                    >
+                      {m.title}
+                    </h2>
+                    <p
+                      className="text-xs sm:text-sm line-clamp-2 max-w-2xl leading-relaxed mb-3"
+                      style={{ color: "var(--fg-muted)" }}
+                    >
+                      {m.deskripsi}
+                    </p>
+                    <div className="flex items-center gap-4 font-mono text-xs" style={{ color: "var(--fg-muted)" }}>
+                      <span>{m.kelas}</span>
+                      <span>· {m.date}</span>
+                      {m.readingTime && <span>· {m.readingTime}</span>}
+                    </div>
+                  </div>
+                </div>
+
+                <span
+                  className="font-mono text-xs shrink-0 pt-1 transition-transform group-hover:translate-x-1"
+                  style={{ color: "var(--fg)" }}
+                >
+                  Buka ↗
+                </span>
+              </div>
+            </Link>
+          </li>
+        ))}
+      </ol>
+
+      {filtered.length === 0 && (
+        <div
+          className="py-16 text-center font-mono text-xs"
+          style={{
+            borderBottom: "1px solid var(--line)",
+            color: "var(--fg-muted)",
+          }}
+        >
+          Tidak ada materi yang sesuai dengan pencarian.
+        </div>
+      )}
     </main>
   )
 }

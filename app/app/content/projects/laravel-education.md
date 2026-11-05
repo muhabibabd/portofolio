@@ -5,7 +5,7 @@ category: "Full-Stack"
 featured: true
 date: "2023 - 2024"
 role: "Lead Full-Stack Developer"
-deskripsi: "Platform administrasi komprehensif institusi pendidikan — mencakup portal akademik siswa, data master pendidik, absensi cerdas, dan e-raport kurikulum merdeka."
+deskripsi: "Platform administrasi komprehensif institusi pendidikan, mencakup portal akademik siswa, data master pendidik, absensi cerdas, dan e-raport kurikulum merdeka."
 tags: ["Laravel 10", "MySQL", "Livewire", "Tailwind CSS", "PDF Generation"]
 metrics:
   - label: "Siswa Terdaftar"

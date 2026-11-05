@@ -1,51 +1,53 @@
 import type { Metadata, Viewport } from "next"
-import { Syne, Outfit, JetBrains_Mono } from "next/font/google"
+import { Instrument_Serif, Geist, Geist_Mono } from "next/font/google"
 import "./globals.css"
 import Navbar from "./components/Navbar"
 import Footer from "./components/Footer"
-import ScrollProgressBar from "./components/ScrollProgressBar"
+import BackgroundGridEffect from "./components/BackgroundGridEffect"
 
-const syne = Syne({
+const instrumentSerif = Instrument_Serif({
   subsets: ["latin"],
-  variable: "--font-syne",
-  weight: ["500", "600", "700", "800"],
+  variable: "--font-instrument-serif",
+  weight: "400",
+  style: ["normal", "italic"],
   display: "swap",
 })
 
-const outfit = Outfit({
+const geist = Geist({
   subsets: ["latin"],
-  variable: "--font-outfit",
-  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-geist",
+  weight: ["400", "500"],
   display: "swap",
 })
 
-const jetbrainsMono = JetBrains_Mono({
+const geistMono = Geist_Mono({
   subsets: ["latin"],
-  variable: "--font-mono",
-  weight: ["400", "500", "600"],
+  variable: "--font-geist-mono",
+  weight: "400",
   display: "swap",
 })
 
 export const viewport: Viewport = {
-  themeColor: "#08090d",
+  themeColor: "#0a0a0a",
   width: "device-width",
   initialScale: 1,
 }
 
 export const metadata: Metadata = {
   title: {
-    default: "Muhammad Habib Abdillah — Full-Stack Developer & Systems Architect",
-    template: "%s | Habib.dev",
+    default: "Muhammad Habib Abdillah: Systems Architect & Full-Stack Developer",
+    template: "%s | Habib Abdillah",
   },
   description:
-    "Portfolio resmi Muhammad Habib Abdillah — Full-Stack Developer & Systems Architect spesialis PHP, Laravel, Next.js, dan arsitektur sistem informasi modular yang scalable.",
+    "Spesifikasi rekayasa perangkat lunak dan portofolio Muhammad Habib Abdillah: Systems Architect spesialis PHP, Laravel, ERP modular, Next.js SSG, dan Docker Swarm.",
   keywords: [
     "Muhammad Habib Abdillah",
-    "Full-Stack Developer",
-    "Laravel Developer Indonesia",
-    "Next.js Developer",
     "Systems Architect",
-    "Portfolio Web Developer",
+    "Full-Stack Developer",
+    "Laravel Indonesia",
+    "Modular ERP",
+    "Next.js SSG",
+    "Docker Swarm",
   ],
   authors: [{ name: "Muhammad Habib Abdillah" }],
   creator: "Muhammad Habib Abdillah",
@@ -53,10 +55,10 @@ export const metadata: Metadata = {
     type: "website",
     locale: "id_ID",
     url: "https://habib.dev",
-    title: "Muhammad Habib Abdillah — Full-Stack Developer",
+    title: "Muhammad Habib Abdillah: Systems Architect & Full-Stack Developer",
     description:
-      "Membangun sistem informasi modular, performan, dan berdaya tahan tinggi dengan Laravel, Next.js, dan Cloud DevOps.",
-    siteName: "Habib Portfolio",
+      "Dokumen spesifikasi rekayasa perangkat lunak: arsitektur modular, efisiensi backend, dan antarmuka statis performa tinggi.",
+    siteName: "Habib Abdillah Engineering",
   },
 }
 
@@ -69,16 +71,14 @@ export default function RootLayout({
     <html lang="id" className="dark scroll-smooth">
       <body
         suppressHydrationWarning={true}
-        className={`${syne.variable} ${outfit.variable} ${jetbrainsMono.variable} font-sans bg-[#090a0f] text-[#f8fafc] antialiased selection:bg-blue-600/30 selection:text-white relative min-h-screen flex flex-col`}
+        className={`${instrumentSerif.variable} ${geist.variable} ${geistMono.variable} bg-[#0a0a0a] text-[#fafafa] antialiased selection:bg-[#fafafa] selection:text-[#0a0a0a] min-h-screen relative font-sans`}
       >
-        <ScrollProgressBar />
-
-        {/* Global Subtle Grid */}
-        <div className="fixed inset-0 bg-grid-pattern opacity-30 pointer-events-none -z-10" />
-
-        <Navbar />
-        <div className="flex-1">{children}</div>
-        <Footer />
+        <BackgroundGridEffect />
+        <div className="relative z-10 flex flex-col min-h-screen">
+          <Navbar />
+          <div className="flex-1">{children}</div>
+          <Footer />
+        </div>
       </body>
     </html>
   )

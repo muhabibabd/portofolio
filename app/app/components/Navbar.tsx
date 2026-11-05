@@ -3,185 +3,267 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { motion, AnimatePresence } from "framer-motion"
-import {
-  Code2,
-  Menu,
-  X,
-  ArrowUpRight,
-  Terminal,
-  BookOpen,
-  Briefcase,
-  Layers,
-  Send,
-} from "lucide-react"
+import { Copy, Check, X, ArrowUpRight } from "lucide-react"
 
-const navItems = [
-  { name: "Overview", href: "/", icon: Terminal },
-  { name: "Projects", href: "/projects", icon: Briefcase },
-  { name: "Skills", href: "/#skills", icon: Layers },
-  { name: "Materi", href: "/materi", icon: BookOpen },
-  { name: "Blog", href: "/blog", icon: Code2 },
-  { name: "Contact", href: "/#contact", icon: Send },
+const navLinks = [
+  { name: "Proyek", href: "/#projects" },
+  { name: "Keahlian", href: "/#skills" },
+  { name: "Materi", href: "/materi" },
+  { name: "Blog", href: "/blog" },
 ]
 
 export default function Navbar() {
   const pathname = usePathname()
   const [scrolled, setScrolled] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [contactDialogOpen, setContactDialogOpen] = useState(false)
+  const [copied, setCopied] = useState(false)
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20)
+      setScrolled(window.scrollY > 10)
     }
-    window.addEventListener("scroll", handleScroll)
+    window.addEventListener("scroll", handleScroll, { passive: true })
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
+
+  // Close modals on Escape key
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setMobileMenuOpen(false)
+        setContactDialogOpen(false)
+      }
+    }
+    window.addEventListener("keydown", handleKeyDown)
+    return () => window.removeEventListener("keydown", handleKeyDown)
+  }, [])
+
+  const handleCopyEmail = () => {
+    navigator.clipboard.writeText("muhabibabd@gmail.com")
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
 
   if (pathname?.startsWith("/admin")) return null
 
   return (
-    <header className="sticky top-0 z-50 w-full transition-all duration-300">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-3 pb-2">
-        <div
-          className={`relative flex items-center justify-between px-4 sm:px-6 py-3 rounded-2xl transition-all duration-300 ${
-            scrolled
-              ? "bg-[#0c101d]/85 backdrop-blur-xl border border-white/10 shadow-xl shadow-black/40"
-              : "bg-[#0c101d]/40 backdrop-blur-md border border-white/5"
-          }`}
-        >
-          {/* Brand Logo */}
+    <>
+      <header
+        className={`sticky top-0 z-40 w-full border-b border-[#262626] transition-colors duration-150 ${
+          scrolled ? "bg-[#0a0a0a]" : "bg-[#0a0a0a]/90"
+        }`}
+      >
+        <div className="max-w-[1360px] mx-auto px-5 sm:px-8 lg:px-12 h-14 sm:h-16 flex items-center justify-between">
+          {/* Left: Plain Text Name */}
           <Link
             href="/"
-            className="group flex items-center gap-2.5 font-display text-base sm:text-lg font-bold tracking-tight text-white focus:outline-none"
+            className="text-[15px] font-medium tracking-tight text-[#fafafa] hover:text-[#d4d4d4] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#fafafa]"
           >
-            <span className="relative flex h-8 w-8 items-center justify-center rounded-xl bg-blue-600 shadow-sm group-hover:scale-105 transition-transform">
-              <span className="text-white text-xs font-mono font-black">H</span>
-            </span>
-            <span className="flex items-center">
-              HABIB
-              <span className="text-blue-500">.</span>
-              <span className="text-xs font-mono font-normal text-slate-400 ml-1 px-1.5 py-0.5 rounded bg-white/5 border border-white/5">
-                dev
-              </span>
-            </span>
+            Habib Abdillah
           </Link>
 
-          {/* Desktop Nav Items */}
-          <nav className="hidden md:flex items-center gap-1 bg-white/[0.03] p-1 rounded-xl border border-white/5">
-            {navItems.map((item) => {
+          {/* Center: Clean Nav Links (Desktop) */}
+          <nav className="hidden md:flex items-center gap-8 text-sm">
+            {navLinks.map((link) => {
               const isActive =
-                item.href === "/"
+                link.href === "/"
                   ? pathname === "/"
-                  : pathname?.startsWith(item.href) && item.href !== "/#skills" && item.href !== "/#contact"
+                  : pathname?.startsWith(link.href) && !link.href.includes("#")
 
               return (
                 <Link
-                  key={item.name}
-                  href={item.href}
-                  className={`relative px-3.5 py-1.5 text-xs font-medium uppercase tracking-wider rounded-lg transition-colors duration-200 ${
+                  key={link.name}
+                  href={link.href}
+                  className={`inline-flex items-center transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#fafafa] ${
                     isActive
-                      ? "text-white"
-                      : "text-slate-400 hover:text-slate-100 hover:bg-white/5"
+                      ? "text-[#fafafa] underline underline-offset-4 decoration-1 font-medium"
+                      : "text-[#8a8a8a] hover:text-[#fafafa]"
                   }`}
                 >
-                  {isActive && (
-                    <motion.span
-                      layoutId="navbar-pill"
-                      className="absolute inset-0 rounded-lg bg-blue-600/20 border border-blue-500/30 -z-10"
-                      transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                    />
-                  )}
-                  {item.name}
+                  <span>{link.name}</span>
                 </Link>
               )
             })}
           </nav>
 
-          {/* Right Action: Status indicator & Quick Contact */}
-          <div className="hidden lg:flex items-center gap-3">
-            <div className="flex items-center gap-2 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[11px] text-emerald-400 font-mono">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
-              </span>
-              <span>Available</span>
-            </div>
+          {/* Right: Availability Status + Contact Action */}
+          <div className="hidden md:flex items-center gap-6 text-xs">
+            <span className="inline-flex items-center gap-2 text-[#8a8a8a]">
+              <span className="text-[#fafafa]">●</span>
+              <span>Tersedia untuk proyek</span>
+            </span>
 
-            <Link
-              href="/#contact"
-              className="group relative inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold text-white rounded-xl bg-blue-600 hover:bg-blue-500 transition-colors shadow-sm"
+            <button
+              type="button"
+              onClick={() => setContactDialogOpen(true)}
+              className="text-[#fafafa] underline underline-offset-4 decoration-1 hover:text-[#d4d4d4] transition-colors cursor-pointer text-xs font-medium focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#fafafa]"
             >
-              <span>Hubungi</span>
-              <ArrowUpRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-            </Link>
+              Kontak
+            </button>
           </div>
 
           {/* Mobile Menu Button */}
           <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 rounded-xl text-slate-300 hover:text-white hover:bg-white/5 transition-colors focus:outline-none"
-            aria-label="Toggle Navigation Menu"
+            type="button"
+            onClick={() => setMobileMenuOpen(true)}
+            className="md:hidden text-xs text-[#fafafa] underline underline-offset-4 decoration-1 uppercase tracking-wider focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#fafafa]"
+            aria-label="Buka menu navigasi"
           >
-            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            Menu
           </button>
         </div>
+      </header>
 
-        {/* Mobile Dropdown Panel */}
-        <AnimatePresence>
-          {mobileMenuOpen && (
-            <motion.div
-              initial={{ opacity: 0, y: -10, scale: 0.98 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -10, scale: 0.98 }}
-              transition={{ duration: 0.2 }}
-              className="md:hidden mt-2 p-4 rounded-2xl bg-[#0e1220]/95 backdrop-blur-2xl border border-white/10 shadow-2xl"
+      {/* Mobile Fullscreen Sheet */}
+      {mobileMenuOpen && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          className="fixed inset-0 z-50 bg-[#0a0a0a] flex flex-col justify-between p-6 sm:p-10"
+        >
+          <div className="flex items-center justify-between border-b border-[#262626] pb-5">
+            <span className="text-sm font-medium text-[#fafafa]">
+              Habib Abdillah
+            </span>
+            <button
+              type="button"
+              onClick={() => setMobileMenuOpen(false)}
+              className="text-xs uppercase tracking-wider text-[#fafafa] underline underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#fafafa]"
             >
-              <div className="flex items-center justify-between pb-3 mb-3 border-b border-white/5">
-                <span className="text-xs text-slate-400 font-mono">Navigasi Utama</span>
-                <span className="flex items-center gap-1.5 text-[11px] font-mono text-emerald-400">
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                  Available for Work
-                </span>
-              </div>
+              Tutup (Esc)
+            </button>
+          </div>
 
-              <div className="grid grid-cols-2 gap-2">
-                {navItems.map((item) => {
-                  const Icon = item.icon
-                  return (
-                    <Link
-                      key={item.name}
-                      href={item.href}
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-200 hover:text-white hover:bg-white/5 transition-colors"
-                    >
-                      <Icon className="w-4 h-4 text-blue-500" />
-                      <span>{item.name}</span>
-                    </Link>
-                  )
-                })}
-              </div>
-
-              <div className="mt-4 pt-3 border-t border-white/5 flex gap-2">
+          <div className="space-y-6 my-auto py-8">
+            {navLinks.map((link) => (
+              <div key={link.name} className="border-b border-[#262626] pb-4">
                 <Link
-                  href="/#contact"
+                  href={link.href}
                   onClick={() => setMobileMenuOpen(false)}
-                  className="w-full text-center py-2.5 rounded-xl text-xs font-semibold text-white bg-blue-600 hover:bg-blue-500 transition-colors shadow-sm"
+                  className="block text-3xl sm:text-4xl font-display text-[#fafafa] hover:text-[#8a8a8a] transition-colors"
                 >
-                  Hubungi Sekarang
+                  <span>{link.name}</span>
                 </Link>
-                <a
-                  href="/cv.pdf"
-                  download
-                  className="w-full text-center py-2.5 rounded-xl text-xs font-semibold text-slate-300 bg-white/5 hover:bg-white/10 border border-white/10 transition-colors"
-                >
-                  Download CV
-                </a>
               </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-    </header>
+            ))}
+          </div>
+
+          <div className="border-t border-[#262626] pt-5 flex items-center justify-between text-xs text-[#8a8a8a]">
+            <span>● Tersedia untuk proyek</span>
+            <button
+              type="button"
+              onClick={() => {
+                setMobileMenuOpen(false)
+                setContactDialogOpen(true)
+              }}
+              className="text-[#fafafa] underline underline-offset-4"
+            >
+              Buka Kontak
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Quick Contact Dialog */}
+      {contactDialogOpen && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="contact-dialog-title"
+          className="fixed inset-0 z-50 bg-[#0a0a0a]/80 flex items-center justify-center p-4"
+          onClick={() => setContactDialogOpen(false)}
+        >
+          <div
+            className="w-full max-w-md bg-[#111111] border border-[#404040] p-6 space-y-6"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between border-b border-[#262626] pb-3">
+              <span
+                id="contact-dialog-title"
+                className="text-xs uppercase font-mono tracking-widest text-[#8a8a8a]"
+              >
+                Spesifikasi Kontak
+              </span>
+              <button
+                type="button"
+                onClick={() => setContactDialogOpen(false)}
+                className="text-xs text-[#8a8a8a] hover:text-[#fafafa] cursor-pointer"
+                aria-label="Tutup dialog"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              <p className="text-xs text-[#d4d4d4] leading-relaxed">
+                Alamat korespondensi langsung untuk konsultasi sistem, proyek
+                kontrak, atau rekayasa arsitektur:
+              </p>
+
+              <div className="p-3 bg-[#0a0a0a] border border-[#262626] flex items-center justify-between gap-3">
+                <span className="font-mono text-xs text-[#fafafa] select-all truncate">
+                  muhabibabd@gmail.com
+                </span>
+                <button
+                  type="button"
+                  onClick={handleCopyEmail}
+                  className="text-xs font-mono text-[#fafafa] underline underline-offset-2 hover:text-[#8a8a8a] transition-colors shrink-0 cursor-pointer"
+                >
+                  {copied ? (
+                    <span className="inline-flex items-center gap-1 text-[#fafafa]">
+                      <Check className="w-3.5 h-3.5" /> Tersalin
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center gap-1">
+                      <Copy className="w-3.5 h-3.5" /> Salin
+                    </span>
+                  )}
+                </button>
+              </div>
+
+              <div className="pt-2 flex flex-col gap-2 text-xs">
+                <a
+                  href="mailto:muhabibabd@gmail.com"
+                  className="w-full text-center py-2.5 bg-[#fafafa] text-[#0a0a0a] font-medium hover:bg-[#d4d4d4] transition-colors"
+                >
+                  Buka Email Client
+                </a>
+
+                <div className="flex items-center justify-between pt-3 border-t border-[#262626] text-[#8a8a8a]">
+                  <a
+                    href="https://github.com/muhabibabd"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-[#fafafa] transition-colors inline-flex items-center gap-0.5"
+                  >
+                    <span>GitHub</span>
+                    <ArrowUpRight className="w-3 h-3" />
+                  </a>
+                  <a
+                    href="https://linkedin.com/in/mhabibabdillah"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-[#fafafa] transition-colors inline-flex items-center gap-0.5"
+                  >
+                    <span>LinkedIn</span>
+                    <ArrowUpRight className="w-3 h-3" />
+                  </a>
+                  <a
+                    href="https://gitlab.com/muhabibabd"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-[#fafafa] transition-colors inline-flex items-center gap-0.5"
+                  >
+                    <span>GitLab</span>
+                    <ArrowUpRight className="w-3 h-3" />
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   )
 }

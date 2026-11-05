@@ -2,8 +2,6 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { motion, AnimatePresence } from "framer-motion"
-import { Search, ArrowLeft, ArrowUpRight, Sparkles, Calendar } from "lucide-react"
 import type { ProjectData } from "@/lib/content"
 
 export default function ProjectsClient({
@@ -31,148 +29,188 @@ export default function ProjectsClient({
   })
 
   return (
-    <main className="min-h-screen py-20">
-      <div className="max-w-6xl mx-auto px-6">
-        {/* Breadcrumb Back */}
-        <Link
-          href="/"
-          className="inline-flex items-center gap-2 text-xs font-mono text-slate-400 hover:text-white transition-colors mb-8"
+    <main
+      className="min-h-screen"
+      style={{
+        paddingTop: "clamp(64px, 10vw, 120px)",
+        paddingBottom: "clamp(64px, 10vw, 120px)",
+        paddingLeft: "clamp(20px, 4vw, 48px)",
+        paddingRight: "clamp(20px, 4vw, 48px)",
+        maxWidth: "1360px",
+        margin: "0 auto",
+      }}
+    >
+      {/* Breadcrumb Back */}
+      <Link
+        href="/"
+        className="inline-block font-mono text-xs mb-10 transition-colors"
+        style={{
+          color: "var(--fg-muted)",
+          textDecorationLine: "underline",
+          textUnderlineOffset: "4px",
+        }}
+      >
+        ← Kembali ke Beranda
+      </Link>
+
+      {/* Header */}
+      <div className="mb-14">
+        <p className="font-mono text-xs uppercase tracking-widest mb-3" style={{ color: "var(--fg-muted)" }}>
+          KATALOG PROYEK &amp; SISTEM
+        </p>
+        <h1
+          className="font-display mb-4"
+          style={{
+            fontSize: "clamp(2.5rem, 6vw, 4.5rem)",
+            letterSpacing: "-0.02em",
+            color: "var(--fg)",
+            lineHeight: 1.05,
+          }}
         >
-          <ArrowLeft className="w-3.5 h-3.5" />
-          <span>Kembali ke Overview</span>
-        </Link>
+          Semua Proyek &amp; Studi Kasus
+        </h1>
+        <p
+          className="max-w-2xl text-base leading-relaxed"
+          style={{ color: "var(--fg-2)" }}
+        >
+          Arsip sistem informasi modular, arsitektur backend skala tinggi dengan Laravel, integrasi REST API, dan deployment container Docker Swarm.
+        </p>
+      </div>
 
-        {/* Header */}
-        <div className="space-y-4 mb-12">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-mono">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Katalog Lengkap</span>
-          </div>
-          <h1 className="text-4xl sm:text-5xl font-display font-extrabold text-white tracking-tight">
-            Karya & Rekayasa Sistem
-          </h1>
-          <p className="text-slate-400 text-sm sm:text-base max-w-2xl leading-relaxed">
-            Eksplorasi portofolio arsitektur backend, aplikasi web full-stack, modul HRIS & ERP terintegrasi, serta orkestrasi container berbasis Docker Swarm.
-          </p>
-        </div>
-
-        {/* Controls: Category + Search */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-3 rounded-2xl bg-[#11131a] border border-white/10 mb-10">
-          <div className="flex flex-wrap gap-1.5 w-full sm:w-auto">
-            {categories.map((cat) => {
-              const active = selectedCategory === cat
-              return (
-                <button
-                  key={cat}
-                  onClick={() => setSelectedCategory(cat)}
-                  className={`px-3.5 py-1.5 rounded-xl text-xs font-mono uppercase tracking-wider transition-all cursor-pointer ${
-                    active
-                      ? "bg-blue-600 text-white font-bold shadow-sm"
-                      : "text-slate-400 hover:text-white hover:bg-white/5"
-                  }`}
-                >
-                  {cat}
-                </button>
-              )
-            })}
-          </div>
-
-          <div className="relative w-full sm:w-72">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-            <input
-              type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Filter teknologi / judul..."
-              className="w-full pl-9 pr-3 py-1.5 text-xs font-mono bg-[#0c0d14] border border-white/10 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
-            />
-          </div>
-        </div>
-
-        {/* Projects Grid with Scroll In-View Animation */}
-        <motion.div layout className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <AnimatePresence mode="popLayout">
-            {filtered.map((project, idx) => (
-              <motion.article
-                key={project.slug}
-                layout
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.15 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.35, delay: idx * 0.08, ease: "easeOut" }}
-                whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                className="group relative flex flex-col justify-between p-7 rounded-2xl bg-[#11131a] border border-white/10 hover:border-blue-500/40 shadow-xl shadow-black/40 transition-all duration-300"
+      {/* Controls: Category Filter + Search */}
+      <div
+        className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 mb-10 pb-6"
+        style={{ borderBottom: "1px solid var(--line)" }}
+      >
+        <div className="flex flex-wrap items-center gap-6">
+          {categories.map((cat) => {
+            const active = selectedCategory === cat
+            return (
+              <button
+                key={cat}
+                type="button"
+                onClick={() => setSelectedCategory(cat)}
+                className="font-mono text-xs cursor-pointer transition-colors"
+                style={{
+                  color: active ? "var(--fg)" : "var(--fg-muted)",
+                  textDecorationLine: active ? "underline" : "none",
+                  textUnderlineOffset: "6px",
+                  background: "transparent",
+                  border: "none",
+                  padding: "4px 0",
+                }}
               >
-                <div>
-                  <div className="flex items-center justify-between gap-2 mb-4">
-                    <span className="px-2.5 py-1 rounded-md bg-blue-500/10 border border-blue-500/20 text-[11px] font-mono text-blue-300 font-medium">
-                      {project.category || "Full-Stack"}
-                    </span>
-                    <span className="flex items-center gap-1 text-[11px] font-mono text-slate-400">
-                      <Calendar className="w-3 h-3" />
-                      {project.date || "2024"}
-                    </span>
-                  </div>
+                {cat}
+              </button>
+            )
+          })}
+        </div>
 
-                  <h3 className="text-2xl font-display font-bold text-white group-hover:text-blue-400 transition-colors mb-3">
-                    <Link href={`/projects/${project.slug}`}>{project.title}</Link>
-                  </h3>
+        <div className="w-full sm:w-72">
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Cari teknologi atau nama sistem..."
+            className="w-full px-3 py-2 text-xs font-mono transition-colors"
+            style={{
+              background: "var(--bg-raised)",
+              border: "1px solid var(--line)",
+              color: "var(--fg)",
+              borderRadius: "2px",
+              outline: "none",
+            }}
+          />
+        </div>
+      </div>
 
-                  <p className="text-slate-400 text-sm leading-relaxed mb-6">
-                    {project.deskripsi}
-                  </p>
-
-                  {/* Metrics if available */}
-                  {project.metrics && project.metrics.length > 0 && (
-                    <div className="grid grid-cols-3 gap-2 mb-6 p-3 rounded-xl bg-[#0c0d14] border border-white/10">
-                      {project.metrics.map((m, mIdx) => (
-                        <div key={mIdx} className="text-left">
-                          <p className="text-[9px] uppercase font-mono text-slate-400">{m.label}</p>
-                          <p className="text-xs font-mono font-bold text-emerald-400">{m.value}</p>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  <div className="flex flex-wrap gap-1.5 mb-6">
-                    {project.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="px-2 py-0.5 rounded text-[11px] font-mono bg-[#161922] text-slate-300 border border-white/10"
-                      >
-                        {tag}
-                      </span>
-                    ))}
+      {/* Ledger Table */}
+      <ol style={{ borderTop: "1px solid var(--line)" }}>
+        {filtered.map((project, idx) => (
+          <li key={project.slug} style={{ borderBottom: "1px solid var(--line)" }}>
+            <Link
+              href={`/projects/${project.slug}`}
+              className="group block transition-all"
+              style={{
+                paddingTop: "1.75rem",
+                paddingBottom: "1.75rem",
+                paddingLeft: "0.75rem",
+                paddingRight: "0.75rem",
+                textDecoration: "none",
+                color: "inherit",
+              }}
+            >
+              <div className="flex flex-col md:flex-row md:items-baseline md:justify-between gap-3">
+                <div className="flex items-baseline gap-4 sm:gap-8 flex-1">
+                  <span
+                    className="font-mono text-xs shrink-0"
+                    style={{ color: "var(--fg-muted)" }}
+                  >
+                    {String(idx + 1).padStart(2, "0")}
+                  </span>
+                  <div>
+                    <h2
+                      className="font-display text-2xl sm:text-3xl transition-colors"
+                      style={{
+                        color: "var(--fg)",
+                        letterSpacing: "-0.02em",
+                        lineHeight: 1.1,
+                      }}
+                    >
+                      {project.title}
+                    </h2>
+                    <p
+                      className="text-xs sm:text-sm mt-1 max-w-xl line-clamp-1"
+                      style={{ color: "var(--fg-muted)" }}
+                    >
+                      {project.deskripsi}
+                    </p>
                   </div>
                 </div>
 
-                <div className="pt-4 border-t border-white/10 flex items-center justify-between text-xs font-mono">
-                  <Link
-                    href={`/projects/${project.slug}`}
-                    className="inline-flex items-center gap-1.5 text-blue-400 hover:text-blue-300 font-semibold group-hover:underline"
+                <div className="flex items-baseline justify-between md:justify-end gap-6 sm:gap-8 pl-8 md:pl-0 shrink-0">
+                  <span
+                    className="font-mono text-xs hidden sm:inline"
+                    style={{ color: "var(--fg-muted)" }}
                   >
-                    <span>Pelajari Studi Kasus</span>
-                    <ArrowUpRight className="w-4 h-4" />
-                  </Link>
-
-                  <span className="text-slate-400 text-[11px]">
-                    Role: {project.role || "Lead Engineer"}
+                    {project.category || "Full-Stack"}
+                  </span>
+                  <span
+                    className="font-mono text-xs hidden md:inline truncate max-w-xs"
+                    style={{ color: "var(--fg-muted)" }}
+                  >
+                    {project.tags.slice(0, 3).join(", ")}
+                  </span>
+                  <span
+                    className="font-mono text-xs shrink-0"
+                    style={{ color: "var(--fg-muted)" }}
+                  >
+                    {project.date || "2024"}
+                  </span>
+                  <span
+                    className="font-mono text-xs transition-transform group-hover:translate-x-1"
+                    style={{ color: "var(--fg)" }}
+                  >
+                    Lihat studi ↗
                   </span>
                 </div>
-              </motion.article>
-            ))}
-          </AnimatePresence>
-        </motion.div>
+              </div>
+            </Link>
+          </li>
+        ))}
+      </ol>
 
-        {filtered.length === 0 && (
-          <div className="py-20 text-center border border-dashed border-white/10 rounded-2xl">
-            <p className="text-slate-400 font-mono text-sm">
-              Tidak ada proyek yang cocok dengan kata kunci &quot;{search}&quot;.
-            </p>
-          </div>
-        )}
-      </div>
+      {filtered.length === 0 && (
+        <div
+          className="py-16 text-center font-mono text-xs"
+          style={{
+            borderBottom: "1px solid var(--line)",
+            color: "var(--fg-muted)",
+          }}
+        >
+          Tidak ada proyek yang sesuai dengan &quot;{search}&quot;.
+        </div>
+      )}
     </main>
   )
 }

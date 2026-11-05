@@ -1,6 +1,5 @@
 import { notFound } from "next/navigation"
 import Link from "next/link"
-import { ArrowLeft, Clock, Calendar } from "lucide-react"
 import { getAllMateri, getMateriBySlug } from "@/lib/content"
 import MarkdownRenderer from "@/components/MarkdownRenderer"
 
@@ -21,7 +20,7 @@ export async function generateMetadata({
   if (!materi) return { title: "Materi Tidak Ditemukan" }
 
   return {
-    title: `${materi.title} — Silabus Pembelajaran`,
+    title: `${materi.title}: Silabus Pembelajaran`,
     description: materi.deskripsi,
   }
 }
@@ -39,64 +38,91 @@ export default async function MateriDetailPage({
   }
 
   return (
-    <main className="min-h-screen py-20">
-      <div className="max-w-3xl mx-auto px-6">
-        {/* Navigation Back */}
+    <main
+      className="min-h-screen"
+      style={{
+        paddingTop: "clamp(64px, 10vw, 120px)",
+        paddingBottom: "clamp(64px, 10vw, 120px)",
+        paddingLeft: "clamp(20px, 4vw, 48px)",
+        paddingRight: "clamp(20px, 4vw, 48px)",
+        maxWidth: "760px",
+        margin: "0 auto",
+      }}
+    >
+      {/* Navigation Back */}
+      <Link
+        href="/materi"
+        className="inline-block font-mono text-xs mb-10 transition-colors"
+        style={{
+          color: "var(--fg-muted)",
+          textDecorationLine: "underline",
+          textUnderlineOffset: "4px",
+        }}
+      >
+        ← Kembali ke Daftar Materi
+      </Link>
+
+      {/* Header */}
+      <header
+        className="mb-12 pb-10"
+        style={{ borderBottom: "1px solid var(--line)" }}
+      >
+        <p className="font-mono text-xs uppercase tracking-widest mb-3" style={{ color: "var(--fg-muted)" }}>
+          SILABUS / {materi.kelas.toUpperCase()}
+        </p>
+
+        <h1
+          className="font-display mb-6"
+          style={{
+            fontSize: "clamp(2.25rem, 5vw, 3.75rem)",
+            letterSpacing: "-0.02em",
+            color: "var(--fg)",
+            lineHeight: 1.05,
+          }}
+        >
+          {materi.title}
+        </h1>
+
+        <div
+          className="flex flex-wrap items-center gap-4 font-mono text-xs"
+          style={{ color: "var(--fg-muted)" }}
+        >
+          <span>{materi.kelas}</span>
+          <span>· {materi.date}</span>
+          {materi.readingTime && <span>· {materi.readingTime}</span>}
+        </div>
+      </header>
+
+      {/* Body */}
+      <article className="mb-16">
+        <MarkdownRenderer content={materi.content} />
+      </article>
+
+      {/* Footer Navigation */}
+      <div
+        className="py-6 flex justify-between items-center font-mono text-xs"
+        style={{ borderTop: "1px solid var(--line)" }}
+      >
         <Link
           href="/materi"
-          className="inline-flex items-center gap-2 text-xs font-mono text-slate-400 hover:text-white transition-colors mb-8"
+          style={{
+            color: "var(--fg)",
+            textDecorationLine: "underline",
+            textUnderlineOffset: "4px",
+          }}
         >
-          <ArrowLeft className="w-3.5 h-3.5" />
-          <span>Kembali ke Daftar Materi</span>
+          ← Kembali ke Silabus Lengkap
         </Link>
-
-        {/* Header */}
-        <header className="space-y-4 mb-10 pb-8 border-b border-white/10">
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-mono uppercase tracking-wider px-3 py-1 rounded-full bg-blue-500/10 text-blue-300 border border-blue-500/20 font-semibold">
-              {materi.kelas}
-            </span>
-          </div>
-
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-display font-extrabold text-white tracking-tight leading-tight">
-            {materi.title}
-          </h1>
-
-          <div className="flex items-center gap-4 text-xs font-mono text-slate-400 pt-2">
-            <span className="flex items-center gap-1.5">
-              <Calendar className="w-3.5 h-3.5 text-blue-400" />
-              {materi.date}
-            </span>
-            <span>·</span>
-            <span className="flex items-center gap-1.5">
-              <Clock className="w-3.5 h-3.5 text-sky-400" />
-              {materi.readingTime}
-            </span>
-            <span>·</span>
-            <span>Materi Pembelajaran Terbuka</span>
-          </div>
-        </header>
-
-        {/* Body */}
-        <article className="mb-16">
-          <MarkdownRenderer content={materi.content} />
-        </article>
-
-        {/* Footer Navigation */}
-        <div className="p-6 rounded-2xl bg-[#11131a] border border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <Link
-            href="/materi"
-            className="text-xs font-mono text-blue-400 hover:text-blue-300 font-semibold"
-          >
-            ← Kembali ke Silabus Lengkap
-          </Link>
-          <Link
-            href="/#contact"
-            className="text-xs font-mono text-slate-400 hover:text-white"
-          >
-            Tanya Seputar Materi Ini →
-          </Link>
-        </div>
+        <Link
+          href="/#contact"
+          style={{
+            color: "var(--fg-muted)",
+            textDecorationLine: "underline",
+            textUnderlineOffset: "4px",
+          }}
+        >
+          Tanya Seputar Materi Ini ↗
+        </Link>
       </div>
     </main>
   )
