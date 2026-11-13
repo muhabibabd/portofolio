@@ -2,7 +2,7 @@ import { getAllProjects } from "@/lib/content"
 import ProjectsClient from "./ProjectsClient"
 
 export const metadata = {
-  title: "Proyek Terpilih & Studi Kasus Rekayasa",
+  title: "Portofolio Terpilih & Studi Kasus Rekayasa",
   description:
     "Koleksi sistem informasi modular, aplikasi ERP, dan infrastruktur container yang dirancang oleh Muhammad Habib Abdillah.",
 }

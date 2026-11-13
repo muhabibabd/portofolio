@@ -4,136 +4,355 @@ import type { ProjectData, BlogPostData, MateriData } from "./content"
 
 export const projectsData: ProjectData[] = [
   {
-    "slug": "cloud-orchestration",
-    "title": "Cloud Infrastructure & Container Orchestration",
-    "deskripsi": "Platform orkestrasi container otomatis berbasis Docker Swarm, Nginx reverse proxy dengan dynamic upstream, dan monitoring terpusat untuk aplikasi multi-tenant.",
-    "tags": [
-      "Docker Swarm",
-      "Nginx",
-      "Linux Automation",
-      "Prometheus",
-      "CI/CD"
-    ],
-    "category": "DevOps & Cloud",
-    "featured": true,
-    "date": "2024",
-    "role": "DevOps & Systems Architect",
-    "liveUrl": "",
-    "githubUrl": "",
-    "metrics": [
-      {
-        "label": "Cluster Uptime",
-        "value": "99.98%"
-      },
-      {
-        "label": "Deploy Time",
-        "value": "< 45s"
-      },
-      {
-        "label": "Zero-Downtime",
-        "value": "Rolling Update"
-      }
-    ],
-    "content": "# Cloud Infrastructure & Container Orchestration\n\nArsitektur infrastruktur server mandiri (bare-metal to VPS) yang dikonfigurasi untuk menjalankan klaster aplikasi web bervolume tinggi dengan efisiensi biaya maksimal.\n\n### Arsitektur Utama\n- **Docker Swarm Cluster**: Manajemen 4 node (1 Manager, 3 Workers) dengan automatic health check dan restart policy.\n- **Nginx Reverse Proxy**: Dynamic reverse proxying dengan Let's Encrypt automated renewal dan rate limiting untuk mitigasi DDoS.\n- **CI/CD Pipeline**: GitHub Actions terintegrasi untuk linting, automated testing, container image build, dan push ke private registry.\n- **Log Aggregation & Monitoring**: Stack monitoring terpusat untuk mendeteksi lonjakan memori, CPU throttle, dan error spike secara real-time.\n\n### Keunggulan\n- Rollout versi baru aplikasi tanpa downtime sedetik pun (rolling update).\n- Penghematan biaya infrastruktur cloud hingga 50% dibanding managed cloud kubernetes konvensional untuk kebutuhan skala menengah."
-  },
-  {
-    "slug": "erp-inventory",
-    "title": "Enterprise ERP & Smart Inventory",
-    "deskripsi": "Sistem Enterprise Resource Planning (ERP) terintegrasi untuk supply chain, manajemen pergudangan multi-cabang, barcode scanning, dan laporan keuangan real-time.",
+    "slug": "pos-retail",
+    "title": "POS - Point of Sales & Multi-Outlet Inventory",
+    "deskripsi": "Sistem kasir pintar dan manajemen inventaris multi-cabang (studi kasus Kv. Putra Mandiri) dengan offline-first PWA, cetak struk Bluetooth ESC/POS, dan pemantauan stok real-time.",
     "tags": [
       "Laravel 11",
+      "Next.js PWA",
       "PostgreSQL",
-      "Next.js",
-      "Redis",
+      "IndexedDB Offline",
+      "ESC/POS Thermal",
+      "Redis"
+    ],
+    "category": "Backend & ERP",
+    "featured": true,
+    "date": "2026",
+    "role": "Lead Full-Stack Developer & ERP Specialist",
+    "liveUrl": "https://pos.putramandiricollection.com/",
+    "githubUrl": "",
+    "coverImage": "/images/projects/pos-retail-cover.png",
+    "metrics": [
+      {
+        "label": "Stok Terkelola",
+        "value": "11,200+ unit"
+      },
+      {
+        "label": "Waktu Cetak Struk",
+        "value": "<0.8s"
+      },
+      {
+        "label": "Sinkronisasi Offline",
+        "value": "100% Akurat"
+      }
+    ],
+    "content": "# POS - Point of Sales & Multi-Outlet Inventory\n\nPoint of Sales (POS) dan Enterprise Resource Planning (ERP) ritel multi-cabang yang dirancang untuk kecepatan transaksi kasir, pelacakan mutasi logistik antar gudang, dan rekonsiliasi omset penjualan secara terpusat (diimplementasikan pada Kv. Putra Mandiri).\n\n![Dashboard Super Admin POS Multi-Cabang Kv. Putra Mandiri](/images/projects/pos-retail-cover.png)\n\n## 1. Konteks & Masalah\n- Fluktuasi koneksi internet di lokasi gerai fisik (pasar/cabang daerah) sering menyebabkan aplikasi kasir berbasis web konvensional macet (*freeze*).\n- Ketidaksinkronan antara stok di gudang pusat dengan stok display di cabang (seperti Cabang Pasar Sagalaherang), memicu insiden barang habis saat transaksi.\n- Sulit memantau total omset penjualan multi-cabang, kalkulasi sisa piutang pelanggan, dan peringatan dini stok menipis (*minimum stock alert*).\n\n## 2. Arsitektur & Rekayasa Teknis\n1. **Offline-First PWA & Background Sync**:\n   - Frontend kasir memanfaatkan IndexedDB di browser untuk menyimpan katalog produk, barcode, harga grosir/eceran, dan antrean transaksi offline.\n   - Menggunakan Service Worker dan Background Sync API: saat jaringan terhubung kembali, transaksi offline otomatis terkirim dan terekonsiliasi ke server cloud tanpa konflik nomor faktur.\n2. **Konektivitas Printer Termal Raw ESC/POS**:\n   - Integrasi langsung via Web Bluetooth API dan WebUSB ke mesin thermal printer 58mm/80mm untuk mencetak struk kasir dalam hitungan milidetik tanpa pop-up dialog print browser.\n3. **Multi-Warehouse Stock Reservation**:\n   - Mekanisme reservasi stok real-time saat produk dimasukkan ke keranjang kasir untuk mencegah *overselling* antar kasir dalam satu cabang.\n4. **Metode Penilaian Persediaan Otomatis (FIFO / Moving Average)**:\n   - Kalkulasi otomatis Harga Pokok Penjualan (HPP) setiap kali faktur penjualan diterbitkan, menghasilkan laporan laba kotor bersih per item seketika.\n\n## 3. Fitur Utama\n- **Dashboard Super Administrator**: Pemantauan terpusat metrik total cabang aktif, total produk dan varian, omset penjualan harian/bulanan, total uang masuk, dan sisa piutang konsumen.\n- **Manajemen Gudang Pusat & Mutasi Logistik**: Modul permintaan barang cabang (*stock request*), transfer antar cabang, dan verifikasi barang masuk/keluar.\n- **Peringatan Stok Minimum (Low Stock Alert)**: Notifikasi dini ketika jumlah unit barang di cabang atau gudang utama menyentuh batas aman minimum.\n- **Kasir Cepat & Barcode Scanner**: Dukungan barcode scanner laser USB/Bluetooth dengan shortcut keyboard lengkap untuk transaksi cepat tanpa mouse.\n\n## 4. Dampak & Hasil\n- Kasir tetap dapat bertransaksi 100% normal saat internet padam tanpa ada transaksi yang hilang.\n- Berhasil mengelola perputaran ribuan varian produk dan lebih dari 11.200 unit stok barang yang tersebar di multi-cabang secara akurat.\n- Mempercepat proses checkout kasir hingga 3x lipat dibanding sistem kasir manual sebelumnya."
+  },
+  {
+    "slug": "siap-exam",
+    "title": "SIAP Exam - Modul Ujian CBT & Scanner OMR LJK",
+    "deskripsi": "Sistem asesmen hibrida (Google Play) yang menggabungkan ujian online CBT anti-curang dengan pemindai Lembar Jawaban Komputer (LJK) berbasis Computer Vision OMR.",
+    "tags": [
+      "Laravel 11",
+      "Python OpenCV",
+      "OMR Processing",
+      "PostgreSQL",
+      "WebSockets",
       "Tailwind CSS"
     ],
     "category": "Full-Stack",
     "featured": true,
-    "date": "2024",
-    "role": "Full-Stack Engineer",
-    "liveUrl": "",
+    "date": "2026",
+    "role": "Full-Stack & Computer Vision Engineer",
+    "liveUrl": "https://play.google.com/store/apps/details?id=com.siaphub.siapexam&hl=id",
     "githubUrl": "",
+    "coverImage": "/images/projects/siap-exam-cover.png",
     "metrics": [
       {
-        "label": "Daily Transactions",
-        "value": "15,000+"
+        "label": "Koreksi LJK Otomatis",
+        "value": "60 lembar/menit"
       },
       {
-        "label": "Query Speedup",
-        "value": "68%"
+        "label": "Tingkat Akurasi OMR",
+        "value": "99.8%"
       },
       {
-        "label": "Branches",
-        "value": "12 Hubs"
+        "label": "Platform",
+        "value": "Google Play"
       }
     ],
-    "content": "# Enterprise ERP & Smart Inventory\n\nSistem ERP berskala enterprise yang dirancang khusus untuk memodernisasi rantai pasok dan pergudangan ritel multi-cabang. Menggabungkan backend tangguh berbasis Laravel 11 dengan antarmuka front-end responsif dan performan.\n\n### Latar Belakang & Masalah\nManajemen inventaris konvensional di 12 cabang retail mengalami desinkronisasi stok hingga 14%, menyebabkan keterlambatan restock dan kesulitan dalam kalkulasi HPP (Harga Pokok Penjualan) secara akurat.\n\n### Solusi Arsitektur\n1. **Event-Driven Stock Sync**: Menggunakan event & listener Laravel dipadukan dengan Redis Queue untuk sinkronisasi inventaris multi-cabang tanpa memblokir request pengguna.\n2. **Database Sharding & Partitioning**: PostgreSQL dengan partisi tabel per kuartal fiskal untuk menjaga kecepatan agregasi laporan keuangan.\n3. **PWA Mobile Barcode**: Antarmuka scanning cepat berbasis Next.js untuk operator gudang lapangan dengan dukungan offline cache.\n\n### Dampak & Hasil\n- Desinkronisasi data berkurang hingga 0.02%.\n- Waktu pelaporan laba rugi bulanan berkurang dari 3 hari menjadi hitungan menit.\n- Skalabilitas siap mendukung ekspansi hingga 50 cabang."
+    "content": "# SIAP Exam - Modul Ujian CBT & Scanner OMR LJK\n\nSIAP Exam menyediakan solusi evaluasi belajar hibrida lengkap yang telah dipublikasikan di Google Play Store. Mendukung ujian digital berbasis komputer/tablet (CBT) untuk kelas reguler, serta engine pemindaian Lembar Jawaban Komputer (LJK) menggunakan kamera smartphone atau scanner ADF biasa tanpa ketergantungan mesin pembaca khusus.\n\n![Aplikasi Siap Exam di Google Play Store](/images/projects/siap-exam-cover.png)\n\n## 1. Konteks & Masalah\n- Membeli mesin pemindai LJK bermerek khusus membutuhkan anggaran ratusan juta rupiah dengan lembar kertas optik impor yang mahal.\n- Ujian berbasis komputer konvensional rawan kecurangan: siswa sering membagi layar (*split screen*) atau membuka tab pencarian jawaban di latar belakang.\n- Pengoreksian ribuan lembar ujian kertas secara manual oleh guru memerlukan waktu berminggu-minggu dengan risiko kelelahan dan *human error*.\n\n## 2. Arsitektur & Rekayasa Teknis\n1. **Engine OMR Berbasis Computer Vision (OpenCV)**:\n   - Template LJK standar didesain dapat dicetak menggunakan kertas HVS biasa dan printer fotokopi standar.\n   - Modul Python OpenCV mendeteksi 4 titik sudut fidusial (*fiducial markers*), melakukan koreksi distorsi perspektif (*four-point perspective transform*), dan menghitung ambang batas kerapatan piksel pensil/pulpen (*adaptive thresholding*).\n2. **CBT Engine Berintegritas Tinggi**:\n   - Algoritma pengacakan butir soal dan kunci opsi jawaban unik per siswa berbasis seed token sesi.\n   - Sistem auto-save jawaban lokal setiap 5 detik dengan sinkronisasi heartbeat WebSockets ke server utama.\n3. **Anti-Cheat Browser Lockdown**:\n   - Deteksi kehilangan fokus jendela (`blur` / `visibilitychange`), larangan kombinasi shortcut keyboard (`Alt+Tab`, `Ctrl+C`, `F12`), dan snapshot berkala melalui kamera bila diaktifkan pengawas.\n4. **Item Response Theory (IRT) & Analisis Butir Soal**:\n   - Kalkulasi otomatis tingkat kesukaran soal, daya pembeda, dan efektivitas pengecoh secara instan sesaat setelah ujian berakhir.\n\n## 3. Fitur Utama\n- **Scanner LJK Universal via Smartphone / ADF**: Upload file PDF hasil scan kantor atau tangkap foto langsung dari kamera smartphone; sistem langsung memproses batch dan menampilkan nilai.\n- **Bank Soal & Formula LaTeX**: Dukungan soal pilihan ganda kompleks, benar/salah, menjodohkan, esai, hingga rumus matematika berbasis LaTeX dan file audio listening bahasa asing.\n- **Live Proctoring Monitor**: Panel pengawas ujian yang menampilkan status koneksi siswa secara real-time, sisa waktu ujian, dan peringatan pelanggaran bila siswa mencoba berpindah aplikasi.\n- **Ekspor Nilai & Ledger Rapor**: Nilai terintegrasi otomatis ke buku nilai rapor SIAP Pusat tanpa re-input manual.\n\n## 4. Dampak & Hasil\n- Memangkas biaya pengadaan mesin OMR khusus hingga 90% dengan tetap mempertahankan akurasi pembacaan LJK di atas 99.8%.\n- Pengumuman hasil ujian try out dan Penilaian Akhir Semester (PAS) dapat dipublikasikan dalam hitungan jam setelah sesi selesai.\n- Teruji menangani lebih dari 1.200 siswa aktif secara bersamaan pada infrastruktur server lokal on-premise sekolah."
   },
   {
-    "slug": "laravel-education",
-    "title": "Sistem Informasi Pendidikan Terpadu",
-    "deskripsi": "Platform administrasi komprehensif institusi pendidikan, mencakup portal akademik siswa, data master pendidik, absensi cerdas, dan e-raport kurikulum merdeka.",
-    "tags": [
-      "Laravel 10",
-      "MySQL",
-      "Livewire",
-      "Tailwind CSS",
-      "PDF Generation"
-    ],
-    "category": "Full-Stack",
-    "featured": true,
-    "date": "2023 - 2024",
-    "role": "Lead Full-Stack Developer",
-    "liveUrl": "",
-    "githubUrl": "",
-    "metrics": [
-      {
-        "label": "Siswa Terdaftar",
-        "value": "2,400+"
-      },
-      {
-        "label": "Cetak Raport",
-        "value": "Instant (PDF)"
-      },
-      {
-        "label": "Guru Aktif",
-        "value": "140+"
-      }
-    ],
-    "content": "# Sistem Informasi Pendidikan Terpadu\n\nPlatform administrasi institusi pendidikan yang dibangun khusus untuk menyederhanakan birokrasi sekolah, manajemen siswa, penjadwalan pelajaran, dan pelaporan nilai kurikulum merdeka.\n\n### Tantangan\nSistem terdahulu masih menggunakan spreadsheet terpisah yang rentan corrupt, penginputan nilai ganda oleh dewan guru, dan keterlambatan pencetakan raport hingga berhari-hari menjelang akhir semester.\n\n### Solusi Teknis\n- **Modular Multi-Role Authorization**: Pemisahan hak akses ketat antara Administrator, Guru Piket, Wali Kelas, Kepala Sekolah, dan Siswa/Wali Murid.\n- **Bulk Grade Processing**: Menggunakan chunked processing untuk kalkulasi ribuan nilai akhir siswa dan cetak raport PDF batch tanpa timeout.\n- **Audit Trails & Log Activity**: Seluruh perubahan nilai dan data sensitif tercatat secara rapi untuk akuntabilitas institusi."
-  },
-  {
-    "slug": "sdm-module",
-    "title": "Modul SDM & Payroll Otomatis",
-    "deskripsi": "Sistem manajemen sumber daya manusia terintegrasi: data kepegawaian dinamis, kalkulasi potongan PPh 21 otomatis, cuti online, dan slip gaji terenkripsi.",
+    "slug": "siap-kantin",
+    "title": "SIAP Kantin - Modul EDC & Uang Jajan RFID",
+    "deskripsi": "Sistem transaksi cashless kantin sekolah (Google Play) berbasis kartu pelajar RFID dan terminal mesin EDC mini, dilengkapi limit harian orang tua dan rekonsiliasi tenant.",
     "tags": [
       "Laravel 11",
+      "RFID Mifare 13.56MHz",
+      "ESP32 / Android POS",
       "PostgreSQL",
-      "Queue Worker",
-      "REST API",
-      "Docker"
+      "Redis Locks",
+      "WebSockets"
     ],
     "category": "Backend & ERP",
     "featured": true,
-    "date": "2024",
-    "role": "Backend Architect",
-    "liveUrl": "",
+    "date": "2026",
+    "role": "Lead IoT & Backend Engineer",
+    "liveUrl": "https://play.google.com/store/apps/details?id=com.siaphub.edckantin&hl=id",
     "githubUrl": "",
+    "coverImage": "/images/projects/siap-kantin-cover.png",
     "metrics": [
       {
-        "label": "Karyawan Dikelola",
-        "value": "500+"
+        "label": "Waktu Transaksi",
+        "value": "<1.2 detik"
       },
       {
-        "label": "Kalkulasi Payroll",
-        "value": "< 10 Detik"
+        "label": "Volume Transaksi / Hari",
+        "value": "2,000+ tap"
       },
       {
-        "label": "Tingkat Akurasi",
-        "value": "100%"
+        "label": "Platform",
+        "value": "Google Play"
       }
     ],
-    "content": "# Modul SDM & Payroll Otomatis\n\nModul manajemen sumber daya manusia (HRIS) terintegrasi yang dirancang sebagai micro-service modular untuk ekosistem ERP yang lebih luas.\n\n### Fitur Kunci\n- **Formula Payroll Dinamis**: Mengakomodasi tunjangan variabel, lembur, absensi berbasis geolocation & selfie, serta pemotongan pajak PPh 21 TER (Tarif Efektif Rata-Rata) terbaru.\n- **Workflow Persetujuan Cuti Berjenjang**: Pengajuan cuti terhubung dengan notifikasi email/webhook ke supervisor dan update sisa cuti otomatis.\n- **Security & Enkripsi Data Pribadi**: Enkripsi nomor rekening, data gaji pokok, dan generate slip PDF yang diproteksi password unik."
+    "content": "# SIAP Kantin - Modul EDC & Uang Jajan RFID\n\nSIAP Kantin adalah ekosistem pembayaran nontunai (*cashless school ecosystem*) resmi di Google Play Store yang mengubah kartu identitas siswa (smartcard RFID) menjadi dompet digital tertutup (*closed-loop digital wallet*) untuk jajan di area kantin dan koperasi sekolah via mesin EDC/Android POS.\n\n![Aplikasi Siap Kantin di Google Play Store](/images/projects/siap-kantin-cover.png)\n\n## 1. Konteks & Masalah\n- Antrean kantin saat jam istirahat sangat padat; proses tukar uang kembalian pecahan kecil memperlambat transaksi dan memakan waktu istirahat siswa yang hanya 20 menit.\n- Risiko uang jajan hilang, dicuri, atau dibelanjakan untuk hal-hal di luar batas yang diinginkan orang tua di luar lingkungan sekolah.\n- Stand/tenant kantin kesulitan menghitung bagi hasil harian dan rawan selisih kas fisik di akhir hari.\n\n## 2. Arsitektur & Rekayasa Teknis\n1. **Smartcard & Terminal EDC Reader**:\n   - Menggunakan kartu RFID Mifare Classic / Desfire 13.56 MHz yang terenkripsi UID, dihubungkan ke terminal EDC berbasis Android atau mikrokontroler ESP32 via Serial/USB/Wi-Fi.\n2. **Atomic Balance Deduction**:\n   - Mekanisme pemotongan saldo dompet menggunakan *database transaction* dan *atomic Redis distributed locks* (`SETNX`) untuk mencegah kondisi balapan (*race condition*) atau pembelanjaan ganda (*double-spending*) saat jaringan lambat.\n3. **Parental Spending Controls**:\n   - Aturan limit maksimal jajan per hari/sesi dan blacklist menu makanan tertentu (misal: riwayat alergi siswa) yang dievaluasi langsung oleh *decision engine* backend sebelum transaksi disetujui (*approved*).\n4. **Auto-Settlement Multi-Tenant**:\n   - Sistem otomatis menghitung bagi hasil (*profit sharing*) kasir kantin dan menghasilkan laporan split settlement harian untuk setiap pedagang makanan.\n\n## 3. Fitur Utama\n- **Aktivasi Mesin EDC & Kasir Cepat (Fast POS)**: Mode aktivasi perangkat instan dengan kode pairing, input nominal keypad cepat, dan tap kartu 1-klik untuk mempercepat antrean.\n- **Top Up Saldo Multi-Channel**: Pengisian saldo melalui kasir tata usaha, transfer virtual account bank via aplikasi wali murid, atau integrasi QRIS dinamis.\n- **Laporan Penjualan Tenant Harian**: Rekapitulasi penjualan per gerai, menu makanan terlaris, dan rincian bagi hasil yang dapat dicairkan tenant.\n- **Audit Trail & Notifikasi Real-time**: Transaksi tercatat seketika di riwayat belanja siswa yang dapat dipantau langsung oleh wali murid melalui aplikasi SIAP Mobile.\n\n## 4. Dampak & Hasil\n- Mempercepat waktu transaksi kasir dari ~45 detik tunai menjadi kurang dari 1.2 detik per siswa.\n- Mengurangi peredaran uang tunai fisik di sekolah hingga 95%, menciptakan lingkungan higienis di area penyajian makanan.\n- 100% akurasi pembukuan bagi hasil antara pengelola sekolah dan puluhan pedagang kantin tanpa selisih koin."
+  },
+  {
+    "slug": "siap-mobile",
+    "title": "SIAP Mobile - Modul PTK & Siswa",
+    "deskripsi": "Aplikasi seluler terintegrasi untuk guru (PTK), siswa, dan wali murid (Google Play) dengan presensi digital geolokasi, monitoring saldo jajan/SPP, dan notifikasi kegiatan.",
+    "tags": [
+      "Laravel REST API",
+      "React Native",
+      "JWT Auth",
+      "Firebase Cloud Messaging",
+      "Redis Cache",
+      "PostgreSQL"
+    ],
+    "category": "Full-Stack",
+    "featured": true,
+    "date": "2026",
+    "role": "Mobile App Architect & API Engineer",
+    "liveUrl": "https://play.google.com/store/apps/details?id=com.siap.mobile.app&hl=id",
+    "githubUrl": "",
+    "coverImage": "/images/projects/siap-mobile-cover.png",
+    "metrics": [
+      {
+        "label": "Google Play Downloads",
+        "value": "1,000+"
+      },
+      {
+        "label": "Rating Pengguna",
+        "value": "5.0 ★"
+      },
+      {
+        "label": "Latensi API Rata-rata",
+        "value": "<85ms"
+      }
+    ],
+    "content": "# SIAP Mobile - Modul PTK & Siswa\n\nSIAP Mobile merupakan aplikasi Android/iOS resmi di Google Play Store yang menjembatani komunikasi langsung antara institusi pendidikan, tenaga pendidik (PTK), siswa, dan orang tua. Menyederhanakan pelaporan presensi harian, agenda mengajar, pemantauan saldo dompet sekolah, hingga transparansi nilai akademik dari genggaman.\n\n![Aplikasi Siap Mobile di Google Play Store](/images/projects/siap-mobile-cover.png)\n\n## 1. Konteks & Masalah\n- Wali murid sering mengalami keterlambatan informasi mengenai presensi kehadiran atau kepulangan anak di sekolah.\n- Guru masih menggunakan lembar absen fisik yang memakan waktu saat rekap mingguan dan rawan titip absen.\n- Komunikasi pengumuman sekolah terpecah di berbagai grup chat pribadi yang tidak terintegrasi dengan database akademik pusat.\n\n## 2. Arsitektur & Rekayasa Teknis\n1. **Stateless JWT API & Token Refreshing**:\n   - Backend Laravel dirancang sebagai RESTful API tanpa session dengan otorisasi JWT berkecepatan tinggi dan rate-limiting per user/perangkat.\n2. **Geofencing & Anti-Fake GPS Detection**:\n   - Modul presensi PTK memvalidasi radius koordinat GPS sekolah (toleransi 50 meter) serta mendeteksi flag *mock location* dari perangkat Android/iOS untuk mencegah pemalsuan lokasi.\n3. **High-Throughput Push Notification**:\n   - Integrasi Firebase Cloud Messaging (FCM) dengan antrean Redis untuk menyiarkan notifikasi massal ketika siswa terlambat atau terdapat pengumuman mendesak.\n4. **Optimistic Offline Storage**:\n   - Data jadwal harian dan profil siswa di-cache secara lokal di perangkat, memastikan aplikasi tetap responsif meski jaringan internet sekolah mengalami fluktuasi.\n\n## 3. Fitur Utama\n- **Modul PTK (Pendidik & Tenaga Kependidikan)**:\n  - Presensi selfie + koordinat geofencing masuk dan pulang sekolah.\n  - Input jurnal mengajar harian, materi pembahasan, dan absensi per jam pelajaran.\n  - Pengajuan izin sakit atau dinas luar langsung dari smartphone.\n- **Modul Siswa & Wali Murid**:\n  - Log kehadiran waktu nyata (*real-time timestamp*) saat siswa check-in di gerbang sekolah.\n  - Monitoring saldo uang jajan RFID, riwayat transaksi kantin, dan tagihan SPP.\n  - Kartu hasil studi, grafik perkembangan nilai, dan catatan konseling siswa.\n\n## 4. Dampak & Hasil\n- Terpublikasi resmi di Google Play Store dengan rating sempurna 5.0 dan lebih dari 1.000 unduhan aktif.\n- Mencegah kecurangan absensi guru dan staf berkat validasi geofencing ganda.\n- Meningkatkan transparansi monitoring orang tua terhadap kehadiran dan keuangan anak di sekolah hingga 100%."
+  },
+  {
+    "slug": "siap-pendidikan",
+    "title": "SIAP - Sistem Informasi dan Administrasi Pendidikan",
+    "deskripsi": "Platform enterprise manajemen akademik dan administrasi sekolah terpadu dengan autentikasi terpusat SIAPHUB (OAuth 2.0 / OIDC), modul SDM, keuangan SPP, dan PSB.",
+    "tags": [
+      "Laravel 11",
+      "PostgreSQL",
+      "Livewire",
+      "Redis Queue",
+      "OAuth 2.0 / OIDC",
+      "Docker Swarm",
+      "Tailwind CSS"
+    ],
+    "category": "Full-Stack",
+    "featured": true,
+    "date": "2026",
+    "role": "Lead Systems Architect & Full-Stack Developer",
+    "liveUrl": "https://siap.or.id/",
+    "githubUrl": "",
+    "coverImage": "/images/projects/siap-pendidikan-cover.png",
+    "metrics": [
+      {
+        "label": "Siswa Terdaftar",
+        "value": "3,500+"
+      },
+      {
+        "label": "Rekonsiliasi SPP",
+        "value": "Real-time"
+      },
+      {
+        "label": "Uptime Sistem",
+        "value": "99.9%"
+      }
+    ],
+    "content": "# SIAP - Sistem Informasi dan Administrasi Pendidikan\n\nSIAP (Sistem Informasi dan Administrasi Pendidikan) adalah platform terpadu untuk tata kelola ekosistem pendidikan digital. Dirancang untuk mengelola manajemen sekolah, akademik, administrasi tata usaha, hingga komunikasi antara guru, siswa, dan orang tua dalam satu platform yang efisien dan aman.\n\n![Landing Page SIAP & Portal Akun Terpadu SIAPHUB](/images/projects/siap-pendidikan-cover.png)\n\n## 1. Konteks & Masalah\nSebelum SIAP diimplementasikan, institusi menghadapi fragmentasi data yang tersebar:\n- Data kesiswaan, absensi guru, dan buku induk tersimpan di lembar kerja terpisah (spreadsheet) yang rentan konflik data dan duplikasi.\n- Rekonsiliasi pembayaran SPP dan tagihan bulanan membutuhkan waktu berhari-hari setiap akhir bulan karena pencatatan manual di kasir sekolah.\n- Ketiadaan portal autentikasi terpusat: staf sekolah harus mengingat puluhan kredensial login terpisah untuk aplikasi akademik, keuangan, dan presensi.\n\n## 2. Arsitektur & Rekayasa Teknis\nSistem dibangun dengan fokus pada keamanan tingkat tinggi, integritas transaksional, dan skalabilitas multi-tenant:\n1. **SIAPHUB Single Sign-On (SSO)**:\n   - Server autentikasi terpusat berbasis protokol OAuth 2.0 / OpenID Connect (OIDC).\n   - Memungkinkan satu akun terpadu untuk mengakses seluruh ekosistem modul SIAP (SDM, Keuangan, Jurnal, Pembayaran, dan PSB) secara aman dan mulus (*seamless*).\n   - Dilengkapi audit log aktivitas waktu nyata (*realtime audit log*), pembatasan sesi login aktif, dan enkripsi transit 256-bit SSL.\n2. **Database Relasional Skala Menengah**:\n   - PostgreSQL dengan skema partisi per tahun ajaran untuk memisahkan data historis ledger nilai dari transaksi kasir aktif.\n3. **Event-Driven Financial Journal**:\n   - Setiap pembayaran SPP atau tagihan memicu domain event yang langsung menghasilkan nomor jurnal umum berurutan dan mengunci status tagihan siswa menggunakan database row-locking (`SELECT FOR UPDATE`).\n4. **Background Ledger Calculation**:\n   - Agregasi nilai rapor dan ranking kelas dieksekusi secara asinkron melalui Redis Queue Worker, mencegah kelebihan beban server HTTP saat seluruh guru menginput nilai secara serentak.\n\n## 3. Fitur Utama\n- **SIAPHUB Auth Engine**: Autentikasi multi-tenant dengan *role-based access control* (RBAC) berbutir halus untuk Kepala Sekolah, Tata Usaha, Guru (PTK), Bendahara, dan Siswa.\n- **Manajemen Buku Induk Siswa & Mutasi**: Pencatatan riwayat siswa, NISN, dokumen berkas digital, dan histori mutasi kelas otomatis.\n- **Modul Keuangan & Billing Terpadu**: Pembuatan invoice tagihan rutin (SPP, DSP, asrama), integrasi virtual account perbankan, serta cetak bukti kuitansi thermal.\n- **E-Rapor Kurikulum Merdeka & K13**: Generator rapor otomatis dengan kalkulasi capaian pembelajaran, deskripsi capaian otomatis, dan ekspor PDF berkecepatan tinggi.\n- **Portal Kepegawaian & Jam Mengajar**: Pemetaan beban kerja guru (PTK), jadwal pelajaran bebas tabrakan, dan pemantauan jurnal mengajar harian.\n\n## 4. Dampak & Hasil\n- Memangkas waktu tutup buku kas bulanan dari 4 hari menjadi hitungan menit secara real-time.\n- Menghilangkan duplikasi data siswa dan kesalahan entri nilai rapor 100%.\n- Melayani lebih dari 3.500 data siswa dan puluhan ribu transaksi keuangan secara stabil dengan uptime 99.9%."
+  },
+  {
+    "slug": "wavy-wa-official",
+    "title": "Wavy - WhatsApp Business Cloud API (Official Meta Partner)",
+    "deskripsi": "Platform enterprise customer engagement berbasis WhatsApp Cloud API resmi Meta dengan manajemen template pesan verified, multi-agent CS inbox, dan webhook broadcast skala masif.",
+    "tags": [
+      "Meta Graph API",
+      "WhatsApp Cloud API",
+      "Laravel 11",
+      "Redis Streams",
+      "PostgreSQL",
+      "WebSockets CS"
+    ],
+    "category": "DevOps & Cloud",
+    "featured": true,
+    "date": "2026",
+    "role": "Lead API & Cloud Architect",
+    "liveUrl": "http://wavy.cmcentre.my.id/",
+    "githubUrl": "",
+    "coverImage": "/images/projects/wavy-wa-official-cover.png",
+    "metrics": [
+      {
+        "label": "Delivery Success Rate",
+        "value": "99.99%"
+      },
+      {
+        "label": "Throughput Kirim",
+        "value": "80 pesan/detik"
+      },
+      {
+        "label": "Green Badge Verified",
+        "value": "100% Legal"
+      }
+    ],
+    "content": "# Wavy - WhatsApp Business Cloud API (Official Meta Partner)\n\nWavy adalah platform enterprise customer communication yang dibangun di atas fondasi resmi WhatsApp Cloud API dari Meta. Menghilangkan risiko nomor terblokir (*zero-ban guarantee*), mendukung centang hijau (*official green badge verification*), dan dirancang untuk volume pesan transaksional serta kampanye pemasaran skala enterprise.\n\n![Landing Page CM Centre WABA WhatsApp API Resmi](/images/projects/wavy-wa-official-cover.png)\n\n## 1. Konteks & Masalah\n- Perusahaan dan brand ritel berskala besar tidak dapat mengambil risiko nomor komunikasi bisnis mereka diblokir oleh algoritma anti-spam WhatsApp.\n- Kebutuhan tim customer support berjumlah banyak (multi-agent CS) untuk merespons chat dari satu nomor resmi secara serentak dengan sistem penugasan tiket teratur.\n- Regulasi verifikasi template pesan dari Meta yang ketat menuntut adanya middleware manajemen persetujuan template dan tracking analitik yang transparan.\n\n## 2. Arsitektur & Rekayasa Teknis\n1. **Direct Meta Cloud API Integration**:\n   - Berkomunikasi langsung dengan server Meta Graph API v20+ melalui HTTP/2 dan pipeline Redis Streams untuk menelan ribuan event webhook status pesan secara paralel.\n2. **Webhook Signature Verification (HMAC-SHA256)**:\n   - Validasi ketat tanda tangan kriptografis pada setiap payload webhook yang masuk dari Meta untuk mencegah serangan spoofing pesan atau man-in-the-middle.\n3. **Template Lifecycle & Parameter Hydration**:\n   - Modul manajemen siklus hidup template pesan (Marketing, Utility, Authentication/OTP) dengan sinkronisasi status approval Meta secara real-time dan generator parameter dinamis.\n4. **Live Chat Multi-Agent WebSockets**:\n   - Inbox pesan pelanggan terpusat berbasis WebSockets: fitur auto-assignment tiket pesan ke agen CS yang sedang aktif (*round-robin* atau beban terendah), internal notes antar staf, dan status typing indicator.\n\n## 3. Fitur Utama\n- **Official Template Manager**: Buat, edit, dan pantau status peninjauan template WhatsApp langsung dari dashboard tanpa harus membuka Meta Business Manager.\n- **Omni-Agent Customer Support Inbox**: Satu nomor WhatsApp resmi dapat diakses dan dibalas bersamaan oleh puluhan agen CS dengan pembagian departemen dan riwayat obrolan lengkap.\n- **Automated OTP & 2FA Dispatcher**: Endpoint API berprioritas tinggi khusus pengiriman kode verifikasi OTP dengan garansi pengiriman kurang dari 5 detik.\n- **Analitik Percakapan & Laporan Biaya**: Pemantauan metrik pesan terkirim, terbaca, gagal, serta estimasi rincian biaya per percakapan (Conversation-Based Pricing Meta).\n\n## 4. Dampak & Hasil\n- Memberikan keandalan pengiriman pesan 99.99% tanpa kendala server lokal atau risiko pemutusan nomor.\n- Meningkatkan kepuasan respons layanan pelanggan hingga 65% melalui sistem routing multi-agent otomatis.\n- Mendukung pengiriman broadcast pemasaran resmi ke puluhan ribu kontak pelanggan dalam hitungan menit secara patuh regulasi Meta."
+  },
+  {
+    "slug": "ma-alfalah-web",
+    "title": "Website Madrasah Aliyah Al-Falah Nagreg & CMS Terpadu",
+    "deskripsi": "Portal profil institusi madrasah resmi berbasis arsitektur modern berkecepatan tinggi, dilengkapi CMS publikasi artikel, PPDB online, dan galeri prestasi.",
+    "tags": [
+      "Next.js SSG",
+      "Laravel Headless API",
+      "Tailwind CSS",
+      "Cloudflare Pages",
+      "PostgreSQL",
+      "SEO Core Web Vitals"
+    ],
+    "category": "Web & CMS",
+    "featured": false,
+    "date": "2026",
+    "role": "Lead Full-Stack Web Developer",
+    "liveUrl": "https://ma.alfalah.sch.id/",
+    "githubUrl": "",
+    "coverImage": "/images/projects/ma-alfalah-web-cover.png",
+    "metrics": [
+      {
+        "label": "Lighthouse Performance",
+        "value": "98/100"
+      },
+      {
+        "label": "First Contentful Paint",
+        "value": "0.4s"
+      },
+      {
+        "label": "Pendaftar PPDB Online",
+        "value": "600+ calon"
+      }
+    ],
+    "content": "# Website Madrasah Aliyah Al-Falah Nagreg & CMS Terpadu\n\nWebsite resmi Madrasah Aliyah (MA) Al-Falah Nagreg dirancang untuk mencerminkan identitas keislaman, keunggulan akademik, dan tradisi pesantren secara elegan, modern, dan berkinerja tinggi. Dilengkapi dengan portal CMS mandiri untuk tim humas madrasah.\n\n![Beranda Website Resmi MA Al-Falah Nagreg](/images/projects/ma-alfalah-web-cover.png)\n\n## 1. Konteks & Masalah\n- Website lama berbasis CMS monolitik konvensional lambat diakses di jaringan seluler daerah, sering mengalami downtime ketika lonjakan pendaftaran siswa baru (PPDB).\n- Tampilan sebelumnya belum responsif di perangkat mobile dan memiliki performa SEO rendah di pencarian Google.\n- Tim humas kesulitan memperbarui berita dan agenda madrasah karena editor admin yang lambat dan rumit.\n\n## 2. Arsitektur & Rekayasa Teknis\n1. **Decoupled Architecture (Headless)**: Frontend dibangun dengan Next.js Static Site Generation (SSG) dan Incremental Static Regeneration (ISR), dideploy langsung di edge network Cloudflare untuk menjamin latensi minimal bagi pengunjung.\n2. **Robust Laravel CMS Admin**: Panel manajemen konten menggunakan Laravel dengan autentikasi aman, pengompres gambar otomatis berbasis WebP sebelum disimpan di object storage, dan role manajemen redaksi.\n3. **Optimasi Core Web Vitals & SEO**: Implementasi metadata OpenGraph dinamis, skema JSON-LD untuk institusi pendidikan (`EducationalOrganization`), sitemap XML otomatis, dan skor performa Lighthouse 98+.\n4. **Modul PPDB Online Terenkripsi**: Formulir pendaftaran calon santri/siswa baru dengan validasi berkas NISN, upload scan ijazah, dan integrasi WhatsApp auto-reply untuk tanda terima berkas.\n\n## 3. Fitur Utama\n- **Profil Akademik & Program Unggulan**: Informasi kurikulum terpadu (Kemenag & Kepesantrenan), program tahfidz Quran, dan ekstrakurikuler.\n- **Portal Publikasi Berita & Majalah Dinding Digital**: CMS penulisan artikel kegiatan, karya santri, dan pengumuman resmi dengan editor Markdown / WYSIWYG bersih.\n- **Direktori Guru & Prestasi Santri**: Etalase dokumentasi capaian lomba tingkat kabupaten, provinsi, dan nasional beserta arsip tenaga pengajar.\n- **Sistem Pengumuman Kelulusan & PPDB**: Cek status kelulusan berkas pendaftar mandiri menggunakan nomor pendaftaran/NISN.\n\n## 4. Dampak & Hasil\n- Kecepatan pemuatan halaman naik lebih dari 400%, mencapai First Contentful Paint dalam 0.4 detik di jaringan 4G.\n- Memproses ratusan pendaftar PPDB online tanpa hambatan downtime server pada hari pembukaan.\n- Meningkatkan visibilitas pencarian madrasah ke posisi halaman pertama Google untuk kata kunci pendidikan madrasah di Jawa Barat."
+  },
+  {
+    "slug": "pontren-alfalah2-web",
+    "title": "Website Pondok Pesantren Al-Qur'an Al-Falah 2 Nagreg & CMS",
+    "deskripsi": "Portal resmi pesantren modern berbasis quranic editorial dengan CMS terdistribusi, arsip audio kajian kitab, direktori alumni, dan publikasi khazanah pesantren.",
+    "tags": [
+      "Next.js SSG",
+      "Laravel 11",
+      "Tailwind CSS",
+      "PostgreSQL",
+      "Cloudflare CDN",
+      "Audio Streaming API"
+    ],
+    "category": "Web & CMS",
+    "featured": false,
+    "date": "2026",
+    "role": "Lead Full-Stack Web Architect",
+    "liveUrl": "https://alfalah.ponpes.id/",
+    "githubUrl": "",
+    "coverImage": "/images/projects/pontren-alfalah2-web-cover.png",
+    "metrics": [
+      {
+        "label": "Page Load Time",
+        "value": "<0.6s"
+      },
+      {
+        "label": "Arsip Kajian & Khazanah",
+        "value": "250+ konten"
+      },
+      {
+        "label": "Pengunjung Unik / Bulan",
+        "value": "15,000+"
+      }
+    ],
+    "content": "# Website Pondok Pesantren Al-Qur'an Al-Falah 2 Nagreg & CMS\n\nPortal institusi resmi Pondok Pesantren Al-Qur'an Al-Falah 2 Nagreg, dirancang sebagai etalase dakwah digital, informasi kepesantrenan, dan khazanah keilmuan Al-Qur'an dengan visual editorial yang khidmat, tenang, dan berkecepatan tinggi.\n\n![Beranda Portal Resmi Pondok Pesantren Al-Qur'an Al-Falah 2 Nagreg](/images/projects/pontren-alfalah2-web-cover.png)\n\n## 1. Konteks & Masalah\n- Pesantren membutuhkan media representasi digital yang kredibel untuk menjangkau calon wali santri dari berbagai pelosok nusantara hingga mancanegara.\n- Banyaknya rekaman audio pengajian, kitab kuning, dan kajian Al-Qur'an asatidz yang tercecer di platform pihak ketiga tanpa arsip resmi institusi.\n- Kebutuhan kanal resmi untuk informasi pendaftaran santri baru (PSB) yang transparan dan bebas calo.\n\n## 2. Arsitektur & Rekayasa Teknis\n1. **Tipografi Editorial Berkelas & Dark/Light Khidmat**: Desain visual mengedepankan keterbacaan tinggi (*high legibility*) dengan perpaduan tipografi serif Arab/Latin yang presisi dan layout berbasis spec sheet.\n2. **Headless Content Management System (CMS)**: Backend Laravel menyediakan API terproteksi untuk tim media pesantren mempublikasikan jadwal pengajian, artikel keislaman, dan warta kegiatan harian.\n3. **Optimasi Asset Media & Audio Player Terintegrasi**: Mengintegrasikan streaming audio player HTML5 yang ringan untuk mendengarkan lantunan murottal dan rekaman kajian tafsir tanpa membebani bandwidth pengunjung.\n4. **Edge CDN Caching & Global Availability**: Seluruh aset statis dilayani dari Cloudflare CDN multi-region, memastikan akses cepat dan aman dari serangan DDoS.\n\n## 3. Fitur Utama\n- **Khazanah Keilmuan & Audio Kajian**: Direktori rekaman kitab dan kajian tafsir Al-Qur'an dengan fitur pemutar audio latar belakang.\n- **Profil Pesantren & Sanad Keilmuan**: Dokumentasi silsilah keilmuan Al-Qur'an, biografi pendiri/masyayikh, dan kurikulum tahfidz mutqin.\n- **Informasi PSB & Kalkulator Biaya Santri**: Panduan pendaftaran santri baru, alur seleksi tes baca Al-Qur'an, dan transparansi rincian biaya mukim.\n- **Peta Kompleks & Fasilitas Kampus**: Virtual tour dan galeri foto fasilitas asrama, masjid jami', laboratorium bahasa, dan perpustakaan.\n\n## 4. Dampak & Hasil\n- Menjadi rujukan informasi resmi yang menaikkan minat pendaftar santri baru dari luar daerah hingga 40%.\n- Menyediakan wadah arsip digital permanen bagi karya tulis dan rekaman kajian para asatidz pesantren.\n- Performa akses optimal di seluruh tingkatan perangkat mobile santri dan wali murid."
+  },
+  {
+    "slug": "psikotes-platform",
+    "title": "Psikotes - Platform Asesmen Minat Bakat & Psikososial",
+    "deskripsi": "Platform psikometri dan asesmen psikososial digital dengan kalkulasi skor otomatis instan, pemetaan minat bakat Holland (RIASEC), dan generator laporan diagnosis psikolog.",
+    "tags": [
+      "Laravel 11",
+      "Next.js",
+      "PostgreSQL",
+      "Psychometric Scoring Engine",
+      "Puppeteer PDF Engine",
+      "Tailwind CSS"
+    ],
+    "category": "Full-Stack",
+    "featured": false,
+    "date": "2026",
+    "role": "Full-Stack Engineer & Algorithm Developer",
+    "liveUrl": "https://psikotes.cmcentre.my.id/",
+    "githubUrl": "",
+    "coverImage": "/images/projects/psikotes-platform-cover.png",
+    "metrics": [
+      {
+        "label": "Waktu Kalkulasi Skor",
+        "value": "<1.5 detik"
+      },
+      {
+        "label": "Peserta Asesmen",
+        "value": "4,500+"
+      },
+      {
+        "label": "Kecepatan Generate PDF",
+        "value": "20 lembar/batch"
+      }
+    ],
+    "content": "# Psikotes - Platform Asesmen Minat Bakat & Psikososial\n\nPlatform asesmen psikologi digital modern yang dirancang untuk memfasilitasi tes minat bakat siswa, evaluasi gaya belajar, serta skrining kesehatan psikososial dengan scoring engine otomatis berstandar psikometri.\n\n![Platform Asesmen Online Psikotest CM Centre](/images/projects/psikotes-platform-cover.png)\n\n## 1. Konteks & Masalah\n- Asesmen psikotes konvensional menggunakan ratusan lembar soal kertas membutuhkan biaya cetak besar dan rentan bocor.\n- Proses kalkulasi skor manual oleh tim psikolog/konselor membutuhkan waktu 2-3 minggu per batch sekolah sebelum hasil rekomendasi penjurusan siswa keluar.\n- Ketiadaan standarisasi visual laporan membuat penyampaian hasil ke wali murid kurang informatif dan sulit dipahami secara awam.\n\n## 2. Arsitektur & Rekayasa Teknis\n1. **Psychometric Scoring Engine**:\n   - Algoritma pemetaan minat karier berbasis model Holland RIASEC (Realistic, Investigative, Artistic, Social, Enterprising, Conventional).\n   - Skala evaluasi psikososial (DASS-21 / SDQ) dengan normalisasi skor otomatis berdasarkan norma usia dan jenis kelamin.\n2. **Anti-Fatigue Timed Question Flow**:\n   - Antarmuka pengujian dirancang ergonomis dengan pagination dinamis, auto-advance setelah memilih opsi jawaban, dan progress tracking real-time.\n   - Timer countdown per sub-tes yang terkunci secara server-side untuk menjamin validitas reliabilitas instrumen tes.\n3. **High-Speed Headless PDF Report Engine**:\n   - Integrasi Chromium headless (Puppeteer) di background worker untuk mengubah data hasil scoring dan visualisasi grafik radar (spider chart) menjadi dokumen PDF psikogram profesional 8-12 halaman.\n4. **Data Privacy & Encryption**:\n   - Hasil evaluasi psikososial bersifat rahasia; data peserta dan kesimpulan psikolog disimpan dengan enkripsi kolom database AES-256.\n\n## 3. Fitur Utama\n- **Modul Asesmen Minat & Bakat Penjurusan**: Menentukan kecenderungan karier, rekomendasi jurusan kuliah, dan potensi keunggulan bawaan siswa.\n- **Skrining Profil Psikososial & Emosional**: Deteksi dini tingkat stres, kecemasan, dan kemampuan adaptasi sosial di lingkungan pendidikan.\n- **Portal Kerja Konselor / Psikolog**: Dashboard untuk psikolog memvalidasi hasil otomatis, menambahkan catatan klinis, dan menyetujui penerbitan sertifikat hasil.\n- **Download Hasil Mandiri**: Peserta dan orang tua dapat mengunduh rapor psikotes digital terenkripsi menggunakan kode unik token tes.\n\n## 4. Dampak & Hasil\n- Mempersingkat waktu pemrosesan laporan dari 14 hari kerja menjadi instan (siap diunduh beberapa menit setelah tes selesai).\n- Telah digunakan oleh ribuan peserta seleksi dan konseling penjurusan di berbagai sekolah tingkat menengah.\n- Menghemat biaya pengadaan kertas dan logistik hingga 100%."
+  },
+  {
+    "slug": "wabi-wa-gateway",
+    "title": "Wabi - WhatsApp Gateway & Automation Engine (Non-Official)",
+    "deskripsi": "Mesin gateway otomatisasi WhatsApp independen (CM Wabi) berbasis emulasi soket web, dirancang untuk notifikasi transaksi e-commerce, webhook, dan broadcast massal.",
+    "tags": [
+      "Node.js",
+      "Baileys Socket Engine",
+      "Laravel API Wrapper",
+      "Redis Queue",
+      "Docker Container",
+      "PostgreSQL"
+    ],
+    "category": "DevOps & Cloud",
+    "featured": false,
+    "date": "2026",
+    "role": "Backend & Systems Integration Engineer",
+    "liveUrl": "https://wabi.cmcentre.my.id/",
+    "githubUrl": "",
+    "coverImage": "/images/projects/wabi-wa-gateway-cover.png",
+    "metrics": [
+      {
+        "label": "Kapasitas Kirim / Menit",
+        "value": "150+ pesan"
+      },
+      {
+        "label": "Kontak Terkelola",
+        "value": "800+ kontak"
+      },
+      {
+        "label": "Multi-Device Sessions",
+        "value": "Multi-device aktif"
+      }
+    ],
+    "content": "# Wabi - WhatsApp Gateway & Automation Engine (Non-Official)\n\nWabi (CM Wabi) adalah server gateway mandiri yang menghubungkan aplikasi bisnis, sistem kasir (POS), platform CRM, dan webhook e-commerce langsung ke jaringan WhatsApp tanpa biaya per pesan, memanfaatkan protokol soket WhatsApp Web multi-device yang telah dioptimasi untuk konkurensi tinggi.\n\n![Dashboard Superadmin CM Wabi WhatsApp Gateway](/images/projects/wabi-wa-gateway-cover.png)\n\n## 1. Konteks & Masalah\n- Pelaku usaha ritel, startup, dan UMKM membutuhkan kanal pengiriman notifikasi transaksional otomatis (konfirmasi order pesanan, resi pengiriman, reminder tagihan, OTP login) dengan biaya infrastruktur yang terukur.\n- Layanan gateway SaaS pihak ketiga sering mengenakan biaya berlangganan mahal, membatasi kuota pesan per hari, atau memiliki risiko kebocoran data kontak pelanggan.\n- Kebutuhan mengelola beberapa nomor WhatsApp operasional (misal: nomor CS, nomor finance, nomor notifikasi order) dalam satu dashboard terpusat.\n\n## 2. Arsitektur & Rekayasa Teknis\n1. **Headless Socket Session Manager**:\n   - Engine dibangun menggunakan implementasi protokol soket WhatsApp multi-device (Baileys) yang sangat ringan tanpa memerlukan browser Chromium berat.\n   - Kredensial sesi autentikasi dan enkripsi End-to-End disimpan secara terenkripsi di PostgreSQL / Redis dengan kemampuan reconnect otomatis saat terjadi gangguan jaringan.\n2. **Anti-Ban Intelligent Throttling**:\n   - Algoritma antrean pesan cerdas berbasis token-bucket: menerapkan jeda waktu acak (*humanized random delay* 3-8 detik antar pesan), pembatasan kuota per menit per nomor, dan rotasi otomatis jika menggunakan nomor ganda (*load-balancing numbers*).\n3. **Event Webhook Dispatcher**:\n   - Setiap pesan masuk, status centang dua (*delivered*), dan centang biru (*read*) diteruskan via HTTP POST Webhook ke sistem klien dengan mekanisme retry otomatis (Exponential Backoff) bila server tujuan lambat merespons.\n4. **Containerized Multi-Instance**:\n   - Arsitektur Docker modular yang memungkinkan penambahan nomor WhatsApp baru hanya dengan memicu container worker baru tanpa mematikan engine utama.\n\n## 3. Fitur Utama\n- **Dashboard Superadmin CM Wabi**: Pemantauan real-time status perangkat WhatsApp (terhubung / terputus), total kontak terdaftar, log aktivitas pesan terbaru, dan ringkasan kampanye siaran.\n- **RESTful API Pengiriman Lengkap**: Kirim pesan teks, format tombol, pesan gambar promosi, dokumen PDF faktur/invoice, lokasi toko, dan audio via endpoint HTTP standar.\n- **Auto-Reply Bot & Keyword Trigger**: Engine pencocokan kata kunci (regex atau exact match) untuk merespons pertanyaan pelanggan secara otomatis (cek ongkir, jam operasional, panduan order).\n- **Broadcast Campaign Scheduler**: Pengiriman pesan siaran terjadwal kepada ratusan kontak dengan personalisasi nama pelanggan otomatis dan pelacakan status keberhasilan pengiriman.\n\n## 4. Dampak & Hasil\n- Memangkas biaya operasional pengiriman notifikasi SMS/WA pihak ketiga hingga 100% untuk ekosistem aplikasi internal.\n- Menangani pengiriman puluhan ribu pesan notifikasi transaksi, faktur invoice, dan resi ekspedisi per bulan secara konsisten.\n- Menyediakan konektivitas stabil dan berlatensi rendah bagi sistem kasir dan integrasi webhook bisnis."
   }
 ]
 

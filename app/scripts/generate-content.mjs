@@ -39,7 +39,7 @@ function calculateReadingTime(text) {
 const projectsDir = findContentDir("projects")
 let projects = []
 if (fs.existsSync(projectsDir)) {
-  const files = fs.readdirSync(projectsDir).filter((f) => f.endsWith(".md"))
+  const files = fs.readdirSync(projectsDir).filter((f) => f.endsWith(".md") && !f.startsWith("_"))
   projects = files.map((file) => {
     const slug = file.replace(".md", "")
     const raw = fs.readFileSync(path.join(projectsDir, file), "utf-8")
@@ -55,6 +55,7 @@ if (fs.existsSync(projectsDir)) {
       role: data.role || "Lead Backend Developer",
       liveUrl: data.liveUrl || "",
       githubUrl: data.githubUrl || "",
+      coverImage: data.coverImage || data.image || "",
       metrics: data.metrics || [],
       content,
     }
@@ -66,7 +67,7 @@ if (fs.existsSync(projectsDir)) {
 const blogDir = findContentDir("blog")
 let posts = []
 if (fs.existsSync(blogDir)) {
-  const files = fs.readdirSync(blogDir).filter((f) => f.endsWith(".md"))
+  const files = fs.readdirSync(blogDir).filter((f) => f.endsWith(".md") && !f.startsWith("_"))
   posts = files.map((file) => {
     const slug = file.replace(".md", "")
     const raw = fs.readFileSync(path.join(blogDir, file), "utf-8")

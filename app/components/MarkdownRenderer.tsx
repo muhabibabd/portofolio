@@ -26,6 +26,24 @@ export default function MarkdownRenderer({ content }: { content: string }) {
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeHighlight]}
+        components={{
+          img: ({ src, alt }) => (
+            <span className="block my-8">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={src}
+                alt={alt || "Dokumentasi visual"}
+                loading="lazy"
+                className="w-full h-auto border border-[var(--line)] bg-[var(--bg-raised)] object-cover rounded-none"
+              />
+              {alt && (
+                <span className="block mt-2 text-xs font-mono text-[var(--fg-muted)]">
+                  // {alt}
+                </span>
+              )}
+            </span>
+          ),
+        }}
       >
         {content}
       </ReactMarkdown>

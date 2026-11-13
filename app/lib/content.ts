@@ -11,6 +11,7 @@ export interface ProjectData {
   role?: string
   liveUrl?: string
   githubUrl?: string
+  coverImage?: string
   metrics?: { label: string; value: string }[]
   content: string
 }

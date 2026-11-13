@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation"
 import { Copy, Check, X, ArrowUpRight } from "lucide-react"
 
 const navLinks = [
-  { name: "Proyek", href: "/#projects" },
+  { name: "Portofolio", href: "/#projects" },
   { name: "Keahlian", href: "/#skills" },
   { name: "Materi", href: "/materi" },
   { name: "Blog", href: "/blog" },
