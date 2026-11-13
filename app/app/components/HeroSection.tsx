@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { motion } from "framer-motion"
-import { Copy, Check } from "lucide-react"
+import { Copy, Check, Download } from "lucide-react"
 
 export default function HeroSection() {
   const [copied, setCopied] = useState(false)
@@ -42,12 +42,23 @@ export default function HeroSection() {
               penyajian antarmuka cepat berbasis Next.js 16 tanpa dependensi runtime database.
             </p>
 
-            <div className="pt-2 flex flex-wrap items-center gap-6 text-sm">
+            <div className="pt-2 flex flex-wrap items-center gap-4 sm:gap-6 text-sm">
               <a
                 href="#projects"
                 className="inline-block px-6 py-3.5 bg-[#fafafa] text-[#0a0a0a] font-medium hover:bg-[#d4d4d4] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#fafafa]"
               >
-                Lihat studi kasus
+                Lihat portofolio
+              </a>
+
+              <a
+                href="/cv.pdf"
+                download="CV_Muhammad_Habib_Abdillah.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-5 py-3.5 border border-[#404040] bg-[#141414] text-[#fafafa] font-medium hover:bg-[#fafafa] hover:text-[#0a0a0a] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#fafafa]"
+              >
+                <Download className="w-4 h-4" />
+                <span>Unduh CV (PDF)</span>
               </a>
 
               <button

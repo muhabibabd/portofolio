@@ -89,6 +89,17 @@ export default function Navbar() {
 
           {/* Right: Availability Status + Contact Action */}
           <div className="hidden md:flex items-center gap-6 text-xs">
+            <a
+              href="/cv.pdf"
+              download="CV_Muhammad_Habib_Abdillah.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-mono text-[#8a8a8a] hover:text-[#fafafa] flex items-center gap-1 transition-colors"
+            >
+              <span>CV (PDF)</span>
+              <ArrowUpRight className="w-3.5 h-3.5" />
+            </a>
+
             <span className="inline-flex items-center gap-2 text-[#8a8a8a]">
               <span className="text-[#fafafa]">●</span>
               <span>Tersedia untuk proyek</span>
@@ -147,6 +158,19 @@ export default function Navbar() {
                 </Link>
               </div>
             ))}
+
+            <div className="border-b border-[#262626] pb-4">
+              <a
+                href="/cv.pdf"
+                download="CV_Muhammad_Habib_Abdillah.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-between text-2xl sm:text-3xl font-display text-[#fafafa] hover:text-[#8a8a8a] transition-colors"
+              >
+                <span>Unduh CV</span>
+                <span className="font-mono text-xs text-[#8a8a8a]">PDF ↗</span>
+              </a>
+            </div>
           </div>
 
           <div className="border-t border-[#262626] pt-5 flex items-center justify-between text-xs text-[#8a8a8a]">
